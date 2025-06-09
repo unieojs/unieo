@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "es2020",
+    "moduleResolution": "node",
+    "lib": ["webworker", "DOM.Iterable", "ESNext", "ESNext.AsyncIterable"],
+    "incremental": true,
+    "esModuleInterop": true,
+    "useUnknownInCatchVariables": false,
+    "strict": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": [".eslintrc.cjs", "**/*.test.ts", "test", "**/__tests__/**"]
+}
