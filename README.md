@@ -7,13 +7,12 @@ Unieo `[/juːniˈoʊ/]` provides a flexible and extensible routing system design
 ## ✨ Features
 
 - 🚀 **High-performance routing** - Optimized for edge environments with minimal overhead
+- 📦 **Built for modern edge runtimes** - Compatible with Cloudflare Workers, Vercel Edge, Aliyun EdgeRoutine, and more
 - 🛠️ **Extensible executor system** - Pluggable processor architecture for custom routing logic
 - 🔧 **Middleware support** - Comprehensive middleware system for request/response transformation
 - 🎯 **Advanced matching** - Flexible matching system with multiple operators and conditions
-- ⚡ **Built for modern edge runtimes** - Compatible with Cloudflare Workers, Vercel Edge, and more
 - 🔄 **Request/Response rewriting** - Powerful URL, header, and content transformation capabilities
 - 🚦 **Conditional routing** - Route based on headers, cookies, device types, and more
-- 📦 **TypeScript support** - Full TypeScript support with type safety
 
 ## 📥 Installation
 
