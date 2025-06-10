@@ -2,7 +2,7 @@
 
 💪🏻 A powerful router core library for edge computing environments. 
 
-Unieo `[/juːniˈoʊ/]` provides a flexible and extensible routing system designed specifically for edge runtimes. Built with **WinterTC (Web-interoperable Server Runtimes Technical Committee) standards compliance**, Unieo can run seamlessly on any web runtime that supports WinterTC specifications, including Cloudflare Workers, Vercel Edge Functions, Aliyun EdgeRoutine, and other modern edge platforms. 
+Unieo `[/juːniˈoʊ/]` provides a flexible and extensible routing system designed specifically for edge runtimes. It is built with **WinterTC (Web-interoperable Server Runtimes Technical Committee) standards compliance**, ensuring seamless operation on any WinterTC-compliant web runtime, including Cloudflare Workers, Vercel Edge Functions, Aliyun EdgeRoutine, and other modern edge platforms. 
 
 ## ✨ Features
 
