@@ -23,7 +23,7 @@ npm install unieo --save
 ```typescript
 import { Route } from 'unieo';
 
-addEventListener('fetch', (event) => {
+addEventListener('fetch', (event: FetchEvent) => {
   // 创建 Route 实例
   const route = new Route({ event });
   
@@ -44,6 +44,10 @@ addEventListener('fetch', (event) => {
 // 拓展 executor 示例
 ```
 
+## Contributing
+
+We welcome contributions! Please see our [Contributing Guide](.github/CONTRIBUTING.md) for details on how to get started.
+
 ## License
 
-MIT
+MIT License - see the [LICENSE](LICENSE) file for details.
