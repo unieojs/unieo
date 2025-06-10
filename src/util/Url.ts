@@ -34,7 +34,7 @@ export function getHost(urlStr: string, defaultHost: string): string {
       return new URL(urlStr).host;
     } catch (err) {
       // Fallback to defaultHost if URL parsing fails, log warning for debugging
-      console.error('URL parsing failed in getHost:', err);
+      console.warn('URL parsing failed in getHost:', err);
       return defaultHost;
     }
   }
