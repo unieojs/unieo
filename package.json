@@ -1,7 +1,7 @@
 {
-  "name": "unieo",
+  "name": "@unieojs/unieo",
   "version": "0.1.0",
-  "description": "A powerful router core for edge computing environments",
+  "description": "💪 A powerful router core for edge computing environments",
   "dependencies": {
     "cookie": "^0.5.0",
     "koa-compose": "^4.1.0",
