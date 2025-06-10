@@ -293,7 +293,94 @@ const geoRoutes = [
 
 ### 🔗 Middleware Integration
 
-Unieo supports a comprehensive middleware system:
+Unieo supports a comprehensive middleware system with custom middleware registration:
+
+#### 📝 Creating Custom Middleware
+
+First, create your custom middleware following the `MiddlewareGen` pattern:
+
+```typescript
+import type { MiddlewareGen, BaseMiddlewareOption, RouteContext, MiddlewareNext } from 'unieo';
+
+// Define your middleware options interface
+interface AuthMiddlewareOption extends BaseMiddlewareOption {
+  secret: string;
+  headerName?: string;
+}
+
+// Create the middleware generator
+const AuthMiddleware: MiddlewareGen<AuthMiddlewareOption> = (opt) => {
+  return async (ctx: RouteContext, next: MiddlewareNext) => {
+    const { secret, headerName = 'authorization' } = opt;
+    
+    // Get auth header from request
+    const authHeader = ctx.request.headers.get(headerName);
+    
+    if (!authHeader || !authHeader.includes(secret)) {
+      // Set unauthorized response
+      const response = new Response('Unauthorized', {
+        status: 401,
+        headers: { 'content-type': 'text/plain' }
+      });
+      ctx.setResponse(response);
+      return; // Don't call next() to short-circuit the middleware chain
+    }
+    
+    // Add custom header to indicate auth success
+    ctx.request = new Request(ctx.request, {
+      headers: {
+        ...Object.fromEntries(ctx.request.headers),
+        'x-auth-verified': 'true'
+      }
+    });
+    
+    await next(); // Continue to next middleware
+  };
+};
+
+// Rate limiting middleware example
+interface RateLimitMiddlewareOption extends BaseMiddlewareOption {
+  limit: number;
+  window: number; // in milliseconds
+}
+
+const RateLimitMiddleware: MiddlewareGen<RateLimitMiddlewareOption> = (opt) => {
+  const requestCounts = new Map<string, { count: number; resetTime: number }>();
+  
+  return async (ctx: RouteContext, next: MiddlewareNext) => {
+    const { limit, window } = opt;
+    const clientIP = ctx.request.headers.get('cf-connecting-ip') || 'unknown';
+    const now = Date.now();
+    
+    // Get or initialize request count for this IP
+    let clientData = requestCounts.get(clientIP);
+    if (!clientData || now > clientData.resetTime) {
+      clientData = { count: 0, resetTime: now + window };
+      requestCounts.set(clientIP, clientData);
+    }
+    
+    clientData.count++;
+    
+    if (clientData.count > limit) {
+      const response = new Response('Rate limit exceeded', {
+        status: 429,
+        headers: {
+          'content-type': 'text/plain',
+          'retry-after': Math.ceil((clientData.resetTime - now) / 1000).toString()
+        }
+      });
+      ctx.setResponse(response);
+      return;
+    }
+    
+    await next();
+  };
+};
+```
+
+#### 🔧 Registering Custom Middleware
+
+Register your custom middleware when creating the Route instance:
 
 ```typescript
 import { Route } from 'unieo';
@@ -306,10 +393,22 @@ const route = new Route({
       // Custom fetch logic
       return fetch(request, options);
     }
-  }
+  },
+  // Register custom middleware
+  middlewares: [
+    ['Auth', AuthMiddleware],
+    ['RateLimit', RateLimitMiddleware],
+    // Add more custom middleware here
+  ]
 });
+```
 
-// Routes with middleware configuration
+#### 📋 Using Custom Middleware in Routes
+
+Now you can use your custom middleware in route configurations:
+
+```typescript
+// Routes with custom middleware configuration
 const routesWithMiddleware = [
   {
     name: 'api-with-middleware',
@@ -326,9 +425,9 @@ const routesWithMiddleware = [
               type: 'middleware',
               value: {
                 source: [
-                  ['Auth', { secret: 'your-secret-key' }],
-                  ['RateLimit', { limit: 100, window: 60000 }],
-                  ['DefaultFetch', {}]
+                  ['Auth', { secret: 'your-secret-key', headerName: 'x-api-key' }],
+                  ['RateLimit', { limit: 100, window: 60000 }], // 100 requests per minute
+                  ['DefaultFetch', {}] // Always include DefaultFetch as the last middleware
                 ],
                 sourceType: 'literal'
               },
