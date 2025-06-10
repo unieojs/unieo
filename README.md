@@ -1,4 +1,4 @@
-# 🚀 Unieo
+# 🍥 Unieo
 
 💪🏻 A powerful router core library for edge computing environments. 
 
