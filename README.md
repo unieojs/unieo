@@ -1,8 +1,8 @@
 # 🚀 Unieo
 
-A powerful router core library for edge computing environments. 
+💪🏻 A powerful router core library for edge computing environments. 
 
-Unieo provides a flexible and extensible routing system designed specifically for edge runtimes like Cloudflare Workers, Vercel Edge Functions, and other modern edge platforms. 
+Unieo `[/juːniˈoʊ/]` provides a flexible and extensible routing system designed specifically for edge runtimes like Cloudflare Workers, Vercel Edge Functions, Aliyun EdgeRoutine, and other modern edge platforms. 
 
 ## ✨ Features
 
@@ -482,4 +482,5 @@ MIT License - see the [LICENSE](LICENSE) file for details.
 
 - [Cloudflare Workers](https://workers.cloudflare.com/) - Deploy serverless code instantly across the globe 🌍
 - [Vercel Edge Functions](https://vercel.com/docs/functions/edge-functions) - Edge-side server functions ⚡
+- [Aliyun EdgeRoutine](https://help.aliyun.com/zh/edge-security-acceleration/dcdn/user-guide/what-is-er) - Write JavaScript code and deploy and execute it on Alibaba Cloud points of presence (POPs) worldwide 🗺️
 - [path-to-regexp](https://github.com/pillarjs/path-to-regexp) - Express-style path matching 🛣️
