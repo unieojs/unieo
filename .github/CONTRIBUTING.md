@@ -13,8 +13,9 @@ Thank you for your interest in contributing to Unieo! We welcome all types of co
 Before you begin contributing, please:
 
 1. Read our [Code of Conduct](CODE_OF_CONDUCT.md)
-2. Check existing [Issues](https://github.com/unieojs/Unieo/issues) and [Pull Requests](https://github.com/unieojs/Unieo/pulls)
-3. Understand the project's technical architecture and code style
+2. Understand the [Developer Certificate of Origin (DCO)](https://developercertificate.org/) requirement - **all commits must be signed off**
+3. Check existing [Issues](https://github.com/unieojs/Unieo/issues) and [Pull Requests](https://github.com/unieojs/Unieo/pulls)
+4. Understand the project's technical architecture and code style
 
 ## Development Environment Setup
 
@@ -115,6 +116,54 @@ git checkout -b fix/bug-description
 
 ### 5. Commit Code
 
+#### Developer Certificate of Origin (DCO)
+
+All commits **MUST** be signed off with the Developer Certificate of Origin (DCO). This is a legal requirement to ensure you have the right to contribute your code.
+
+**How to sign off commits:**
+
+1. **Manual sign-off for each commit:**
+   ```bash
+   git commit -s -m "feat: add new feature"
+   ```
+
+2. **Configure automatic sign-off:**
+   ```bash
+   git config user.name "Your Name"
+   git config user.email "your.email@example.com"
+   git config commit.gpgsign true  # Optional: GPG signing
+   ```
+
+3. **Sign off existing commits retroactively:**
+   ```bash
+   # For the last commit
+   git commit --amend --signoff
+   
+   # For multiple commits (rebase and sign off)
+   git rebase --signoff HEAD~n  # where n is the number of commits
+   ```
+
+**What is DCO?**
+
+The DCO is a statement that you have the right to contribute the code and that you understand the licensing implications. Please read the full [DCO text](https://developercertificate.org/) for complete details. When you sign off a commit, you're confirming:
+
+- The contribution was created by you, or you have permission to submit it
+- You understand and agree that the contribution will be public
+- You understand the contribution is licensed under the project's license
+
+**Commit sign-off format:**
+
+Each commit message must end with a "Signed-off-by" line:
+```
+feat(core): implement new feature
+
+This commit adds support for custom processors.
+
+Signed-off-by: Your Name <your.email@example.com>
+```
+
+**⚠️ Important:** Pull requests with unsigned commits will be rejected. Make sure all your commits are properly signed off before submitting a PR.
+
 #### Commit Message Format
 
 Use [Conventional Commits](https://www.conventionalcommits.org/) format:
@@ -165,7 +214,8 @@ Closes #123
      - Any breaking changes
      - Related issue numbers
 
-4. Ensure CI checks pass:
+4. Ensure all checks pass:
+   - **DCO sign-off check**: All commits must be signed off
    - Code style checks
    - TypeScript type checks
    - All tests pass
