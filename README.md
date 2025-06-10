@@ -2,18 +2,18 @@
 
 💪🏻 A powerful router core library for edge computing environments. 
 
-Unieo `[/juːniˈoʊ/]` provides a flexible and extensible routing system designed specifically for edge runtimes like Cloudflare Workers, Vercel Edge Functions, Aliyun EdgeRoutine, and other modern edge platforms. 
+Unieo `[/juːniˈoʊ/]` provides a flexible and extensible routing system designed specifically for edge runtimes. It is built with **WinterTC (Web-interoperable Server Runtimes Technical Committee) standards compliance**, ensuring seamless operation on any WinterTC-compliant web runtime, including Cloudflare Workers, Vercel Edge Functions, Aliyun EdgeRoutine, and other modern edge platforms. 
 
 ## ✨ Features
 
+- 🌐 **WinterTC Standards Compliance** - Compatible with Web-interoperable Server Runtimes Technical Committee standards, ensuring cross-platform compatibility
 - 🚀 **High-performance routing** - Optimized for edge environments with minimal overhead
+- 📦 **Universal runtime support** - Runs on any WinterTC-compliant runtime including Cloudflare Workers, Vercel Edge, Deno Deploy, Bun, Node.js, and more
 - 🛠️ **Extensible executor system** - Pluggable processor architecture for custom routing logic
 - 🔧 **Middleware support** - Comprehensive middleware system for request/response transformation
 - 🎯 **Advanced matching** - Flexible matching system with multiple operators and conditions
-- ⚡ **Built for modern edge runtimes** - Compatible with Cloudflare Workers, Vercel Edge, and more
 - 🔄 **Request/Response rewriting** - Powerful URL, header, and content transformation capabilities
 - 🚦 **Conditional routing** - Route based on headers, cookies, device types, and more
-- 📦 **TypeScript support** - Full TypeScript support with type safety
 
 ## 📥 Installation
 
@@ -480,6 +480,7 @@ MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🔗 Related Projects
 
+- 🌐 [WinterTC](https://wintertc.org/) - Web-interoperable Server Runtimes Technical Committee standards
 - 🌍 [Cloudflare Workers](https://workers.cloudflare.com/) - Deploy serverless code instantly across the globe
 - ⚡ [Vercel Edge Functions](https://vercel.com/docs/functions/edge-functions) - Edge-side server functions
 - 🗺️ [Aliyun EdgeRoutine](https://help.aliyun.com/zh/edge-security-acceleration/dcdn/user-guide/what-is-er) - Write JavaScript code and deploy and execute it on Alibaba Cloud points of presence (POPs) worldwide
