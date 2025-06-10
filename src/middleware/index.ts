@@ -25,12 +25,12 @@ export class MiddlewareManager {
   #middlewares: MiddlewareConfig[];
   #presetMiddlewares: Map<string, MiddlewareGen<BaseMiddlewareOption>>;
 
-  constructor(data: { presetMiddlewares?: [string, MiddlewareGen<BaseMiddlewareOption>][] }) {
+  constructor(data: { middlewares?: [string, MiddlewareGen<BaseMiddlewareOption>][] }) {
     this.#middlewares = [];
     this.#presetMiddlewares = new Map<string, MiddlewareGen<BaseMiddlewareOption>>([
       [ DEFAULT_FETCH_MIDDLE_NAME, DefaultFetch as MiddlewareGen<BaseMiddlewareOption> ],
       [ 'ErrorFallback', ErrorFallback as MiddlewareGen<BaseMiddlewareOption> ],
-      ...(data.presetMiddlewares ?? []),
+      ...(data.middlewares ?? []),
     ]);
     // 添加默认中间件
   }
@@ -115,3 +115,11 @@ export class MiddlewareManager {
     this.#middlewares = [];
   }
 }
+
+export type {
+  Middleware,
+  MiddlewareConfig,
+  MiddlewareGen,
+  MiddlewareNext,
+  BaseMiddlewareOption,
+} from './types';
