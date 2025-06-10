@@ -1,8 +1,9 @@
-# Unieo
+# 🚀 Unieo
 
-A powerful router core library for edge computing environments. Unieo provides a flexible and extensible routing system designed specifically for edge runtimes like Cloudflare Workers, Vercel Edge Functions, and other modern edge platforms.
+A powerful router core library for edge computing environments. 💪
+Unieo provides a flexible and extensible routing system designed specifically for edge runtimes like Cloudflare Workers, Vercel Edge Functions, and other modern edge platforms. ⚡
 
-## Features
+## ✨ Features
 
 - 🚀 **High-performance routing** - Optimized for edge environments with minimal overhead
 - 🛠️ **Extensible executor system** - Pluggable processor architecture for custom routing logic
@@ -13,15 +14,17 @@ A powerful router core library for edge computing environments. Unieo provides a
 - 🚦 **Conditional routing** - Route based on headers, cookies, device types, and more
 - 📦 **TypeScript support** - Full TypeScript support with type safety
 
-## Installation
+## 📥 Installation
 
 ```bash
 npm install unieo --save
 ```
 
-## Quick Start
+## 🏃‍♂️ Quick Start
 
-### Basic Usage
+> 🚧 **Simplifying in Progress** - The current route configuration schema is relatively complex. We are developing a more concise and intuitive routing API. Stay tuned! You'll be able to achieve the same functionality with much less code in the future.
+
+### 💡 Basic Usage
 
 ```typescript
 import { Route } from 'unieo';
@@ -73,9 +76,9 @@ addEventListener('fetch', (event: FetchEvent) => {
 });
 ```
 
-## Use Cases
+## 🎨 Use Cases
 
-### 1. API Gateway
+### 🌐 1. API Gateway
 
 Perfect for building API gateways that need request routing, authentication, and response transformation:
 
@@ -115,7 +118,7 @@ const apiGatewayRoutes = [
 ];
 ```
 
-### 2. CDN Edge Logic
+### 🚀 2. CDN Edge Logic
 
 Implement sophisticated CDN logic with cache control and content optimization:
 
@@ -160,7 +163,7 @@ const cdnRoutes = [
 ];
 ```
 
-### 3. A/B Testing and Feature Flags
+### 🧪 3. A/B Testing and Feature Flags
 
 Implement dynamic A/B testing based on user characteristics:
 
@@ -205,7 +208,7 @@ const abTestingRoutes = [
 ];
 ```
 
-### 4. Device-Based Routing
+### 📱 4. Device-Based Routing
 
 Route requests based on device characteristics for optimal user experience:
 
@@ -245,7 +248,7 @@ const deviceRoutes = [
 ];
 ```
 
-### 5. Geographical Content Delivery
+### 🌍 5. Geographical Content Delivery
 
 Serve localized content based on user location:
 
@@ -285,9 +288,9 @@ const geoRoutes = [
 ];
 ```
 
-## Advanced Configuration
+## ⚙️ Advanced Configuration
 
-### Middleware Integration
+### 🔗 Middleware Integration
 
 Unieo supports a comprehensive middleware system:
 
@@ -338,7 +341,7 @@ const routesWithMiddleware = [
 ];
 ```
 
-### Complex Matching Logic
+### 🧠 Complex Matching Logic
 
 Create sophisticated matching conditions:
 
@@ -384,9 +387,9 @@ const complexRoutes = [
 ];
 ```
 
-## Route Configuration Reference
+## 📖 Route Configuration Reference
 
-### GroupRouteConfig
+### 📂 GroupRouteConfig
 
 ```typescript
 interface GroupRouteConfig {
@@ -400,7 +403,7 @@ interface GroupRouteConfig {
 }
 ```
 
-### SubRouteConfig
+### 📄 SubRouteConfig
 
 ```typescript
 interface SubRouteConfig {
@@ -418,11 +421,11 @@ interface SubRouteConfig {
 }
 ```
 
-## Extending Unieo
+## 🧩 Extending Unieo
 
-**Note: The extension system is currently under development. The following represents the planned architecture.**
+**Note: The extension system is currently under development. 🚧 The following represents the planned architecture.**
 
-### Custom Processors
+### 🔧 Custom Processors
 
 ```typescript
 // Custom Group Processor (planned)
@@ -449,7 +452,7 @@ class CustomSubProcessor extends BaseSubProcessor {
 }
 ```
 
-### Custom Route Class
+### 🏗️ Custom Route Class
 
 ```typescript
 // Extended Route class (planned)
@@ -466,16 +469,16 @@ class CustomRoute extends Route {
 }
 ```
 
-## Contributing
+## 🤝 Contributing
 
-We welcome contributions! Please see our [Contributing Guide](.github/CONTRIBUTING.md) for details on how to get started.
+We welcome contributions! 🎉 Please see our [Contributing Guide](.github/CONTRIBUTING.md) for details on how to get started.
 
-## License
+## 📜 License
 
 MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Related Projects
+## 🔗 Related Projects
 
-- [Cloudflare Workers](https://workers.cloudflare.com/) - Deploy serverless code instantly across the globe
-- [Vercel Edge Functions](https://vercel.com/docs/functions/edge-functions) - Edge-side server functions
-- [path-to-regexp](https://github.com/pillarjs/path-to-regexp) - Express-style path matching
+- [Cloudflare Workers](https://workers.cloudflare.com/) - Deploy serverless code instantly across the globe 🌍
+- [Vercel Edge Functions](https://vercel.com/docs/functions/edge-functions) - Edge-side server functions ⚡
+- [path-to-regexp](https://github.com/pillarjs/path-to-regexp) - Express-style path matching 🛣️
