@@ -12,7 +12,7 @@ export function isValidUrl(urlStr: string): boolean {
   try {
     url = new URL(urlStr);
   } catch (err) {
-    // URL parsing failed for non-standard protocols, log error and return false
+    // URL parsing failed for non-standard protocols, log warning for debugging
     console.error('URL parsing failed:', err);
     // 某些边缘计算环境的 URL 实现只支持 http/https，其他协议会报错
     return ALIPAY_SCHEMA_PROTOCOL.some(item => urlStr.startsWith(item));
@@ -30,7 +30,13 @@ export function getPath(urlStr: string, defaultHost: string): string {
 
 export function getHost(urlStr: string, defaultHost: string): string {
   if (isValidUrl(urlStr)) {
-    return new URL(urlStr).host;
+    try {
+      return new URL(urlStr).host;
+    } catch (err) {
+      // Fallback to defaultHost if URL parsing fails, log warning for debugging
+      console.error('URL parsing failed in getHost:', err);
+      return defaultHost;
+    }
   }
   return defaultHost;
 }
