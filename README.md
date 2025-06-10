@@ -1,7 +1,8 @@
 # 🚀 Unieo
 
-A powerful router core library for edge computing environments. 💪
-Unieo provides a flexible and extensible routing system designed specifically for edge runtimes like Cloudflare Workers, Vercel Edge Functions, and other modern edge platforms. ⚡
+A powerful router core library for edge computing environments. 
+
+Unieo provides a flexible and extensible routing system designed specifically for edge runtimes like Cloudflare Workers, Vercel Edge Functions, and other modern edge platforms. 
 
 ## ✨ Features
 
