@@ -1,5 +1,5 @@
 {
-  "name": "unieo",
+  "name": "@unieojs/unieo",
   "version": "0.1.0",
   "description": "A powerful router core for edge computing environments",
   "dependencies": {
