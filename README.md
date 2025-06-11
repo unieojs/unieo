@@ -2,6 +2,10 @@
 <h1>🍥 Unieo</h1>
 💪🏻 A schema-driven routing engine for edge computing environments.
 </div>
+
+> [!WARNING]
+> **Development Notice**: Unieo is currently under active development, APIs may change before the 1.0 release.
+
 <br>
 
 Unieo `[/juːniˈoʊ/]` brings code-free routing management to edge computing, with built-in **[WinterTC standards](https://wintertc.org/)** compliance for seamless deployment across Cloudflare Workers, Vercel Edge Functions, Aliyun EdgeRoutine, and other modern edge runtimes.
