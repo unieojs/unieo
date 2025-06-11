@@ -33,15 +33,6 @@ export class SubProcessor extends BaseProcessor {
     return await meta.execute(ctx);
   }
 
-  public handleMetaResult(type: string, result: unknown, ctx: RouteContext) {
-    if (!this.metas.has(type)) {
-      this.logger.warn(`Meta type ${type} not found in processor ${this.name}`);
-      return;
-    }
-    const meta = this.metas.get(type)!;
-    meta.onSuccess(result, ctx);
-  }
-
   public needExecuteMeta(type: string): boolean {
     if (!this.metas.has(type)) {
       this.logger.warn(`Meta type ${type} not found in processor ${this.name}`);

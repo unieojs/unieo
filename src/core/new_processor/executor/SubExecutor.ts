@@ -32,13 +32,13 @@ export class SubExecutor {
       ctx.logger.info('not match, skipped');
       return result;
     }
-    ctx.logger.info('redirect started');
+    ctx.logger.info(`${type} started`);
     try {
       result.result = await this.subProcessor.executeMeta(type, ctx) as T;
       // 重定向命中后，默认 break 和 breakGroup
       result.break = !!result.result;
       result.breakGroup = result.break;
-      ctx.logger.info('redirect succeed');
+      ctx.logger.info(`${type} succeed`);
     } catch (err) {
       const error = genError(ErrorCode.SubRouteRedirectError, {
         message: (err as Error).message,

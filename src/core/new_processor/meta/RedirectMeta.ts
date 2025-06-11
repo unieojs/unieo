@@ -36,10 +36,6 @@ export class RedirectMeta extends BaseMeta {
     return null;
   }
 
-  public onSuccess(result: Response, ctx: RouteContext) {
-    ctx.setResponse(result);
-  }
-
   public needExecute(): boolean {
     return this.redirects.length > 0;
   }

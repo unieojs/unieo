@@ -1,6 +1,7 @@
 import type { BaseMeta, MetaCreator } from './BaseMeta';
 import { RedirectMeta } from './RedirectMeta';
 import type { ILogger } from '../../../types';
+import type { RouteContext } from '../../RouteContext';
 
 export class MetaManager {
   private static instance: MetaManager;
@@ -37,5 +38,9 @@ export class MetaManager {
       throw new Error(`Meta type ${options.type} not found`);
     }
     return metaCreator(options);
+  }
+
+  public handleResult(type: string, result: unknown, ctx: RouteContext) {
+
   }
 }

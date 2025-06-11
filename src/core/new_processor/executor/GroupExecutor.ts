@@ -6,6 +6,7 @@ import { MetaManager } from '../meta/MetaManager';
 interface ExecuteResult {
   success: boolean;
   break: boolean;
+  result?: unknown;
 }
 
 export class GroupExecutor {
@@ -22,7 +23,7 @@ export class GroupExecutor {
   }
 
   public async executeMeta(type: string, ctx: RouteContext): Promise<ExecuteResult> {
-    const result = {
+    const result: ExecuteResult = {
       success: true,
       break: false,
     };
@@ -36,7 +37,6 @@ export class GroupExecutor {
     }
     ctx.logger.info('redirect started');
     result.break = this.groupProcessor.break;
-    let metaResult;
     for (const subExecutor of this.subExecutors) {
       const subResult = await subExecutor.executeMeta(type, ctx);
       result.success = subResult.success;
@@ -44,16 +44,17 @@ export class GroupExecutor {
         result.break = false;
         break;
       }
-      metaResult = subResult.result;
+      result.result = subResult.result;
       result.break = subResult.breakGroup;
       if (subResult.break) {
         break;
       }
     }
-    if (metaResult) {
-      MetaManager.getInstance().create();
-    }
-    ctx.logger.info(metaResult ? `${type} succeed` : `${type} failed`);
+    // TODO: handle result
+    // if (result.result) {
+    //   ctx.setResponse(result.result as Response);
+    // }
+    ctx.logger.info(result.success ? `${type} succeed` : `${type} failed`);
     return result;
   }
 }

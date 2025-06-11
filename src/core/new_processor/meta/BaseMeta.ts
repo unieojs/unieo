@@ -22,7 +22,5 @@ export abstract class BaseMeta {
 
   public abstract execute(ctx: RouteContext): Promise<unknown>;
 
-  public abstract onSuccess(result: unknown, ctx: RouteContext);
-
   public abstract needExecute(): boolean;
 }
