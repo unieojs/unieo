@@ -1,26 +1,78 @@
 <div align="center">
 <h1>🍥 Unieo</h1>
-💪🏻 A powerful routing rule engine for edge computing environments.
+💪🏻 A schema-driven routing engine for edge computing environments.
 </div>
 <br>
 
-Unieo `[/juːniˈoʊ/]` provides a flexible and extensible routing system designed specifically for edge runtimes. It is built with **WinterTC (Web-interoperable Server Runtimes Technical Committee) standards compliance**, ensuring seamless operation on any WinterTC-compliant web runtime, including Cloudflare Workers, Vercel Edge Functions, Aliyun EdgeRoutine, and other modern edge platforms. 
+Unieo `[/juːniˈoʊ/]` brings code-free routing management to edge computing, with built-in **[WinterTC standards](https://wintertc.org/)** compliance for seamless deployment across Cloudflare Workers, Vercel Edge Functions, Aliyun EdgeRoutine, and other modern edge runtimes.
 
-## ✨ Features
+## 💡 Motivation
 
-- 🌐 **WinterTC Standards Compliance** - Compatible with Web-interoperable Server Runtimes Technical Committee standards, ensuring cross-platform compatibility
-- 🚀 **High-performance routing** - Optimized for edge environments with minimal overhead
-- 📦 **Universal runtime support** - Runs on any WinterTC-compliant runtime including Cloudflare Workers, Vercel Edge, Aliyun EdgeRoutine, Node.js and more
-- 🛠️ **Extensible executor system** - Pluggable processor architecture for custom routing logic
-- 🔧 **Middleware support** - Comprehensive middleware system for request/response transformation
-- 🎯 **Advanced matching** - Flexible matching system with multiple operators and conditions
-- 🔄 **Request/Response rewriting** - Powerful URL, header, and content transformation capabilities
-- 🚦 **Conditional routing** - Route based on headers, cookies, device types, and more
+### 🌐 Understanding Edge Computing
+
+Edge computing runs your code at data centers closest to your users, rather than in a single centralized location. This distributed approach delivers faster response times and better user experiences globally.
+
+**The Benefits:**
+- 🚀 **Lower Latency** - Users connect to nearby servers instead of distant ones
+- 🌍 **Global Scale** - Deploy once and run everywhere automatically
+- 💪 **Improved Performance** - Faster page loads and better user experience
+
+Popular edge platforms include **Cloudflare Workers**, **Vercel Edge Functions**, and **Aliyun EdgeRoutine**.
+
+### 🎯 The Routing Challenge
+
+Edge computing unlocks performance benefits, but introduces complexity in managing routing logic across distributed environments.
+
+**Common Requirements:**
+- 🌍 Serve localized content based on user geography
+- 📱 Provide optimized experiences for different device types
+- 👑 Route premium users to enhanced features
+- 🧪 Implement A/B testing and feature flags
+
+**The Traditional Problem:** Every routing change requires code modifications and redeployment across all edge locations.
+
+### 💡 How Unieo Solves This
+
+Unieo separates routing logic from application code through declarative configuration. Update routing rules instantly without touching your codebase.
+
+**The Unieo Approach:**
+```typescript
+// Route users by geography
+{
+  name: 'geo-routing',
+  processor: 'COMMON_SUB_PROCESSOR',
+  meta: {
+    match: {
+      list: [{
+        origin: { source: 'country', sourceType: 'edge_info' },
+        criteria: { source: 'CN', sourceType: 'literal' },
+        operator: 'equal'
+      }]
+    },
+    requestRewrites: [{
+      type: 'url',
+      value: { source: '/zh/home', sourceType: 'literal' },
+      operation: 'set'
+    }]
+  }
+}
+```
+
+**Key Benefits:**
+- 🚀 **Instant Updates** - Change routing rules without code deployment
+- 🌐 **WinterTC Compliance** - Built on web standards for universal compatibility
+- 🎯 **Smart Routing** - Route based on location, device, headers, or custom criteria
+- 🔧 **Schema-Driven** - Define complex logic through declarative configuration
+- ⚡ **Edge-Optimized** - Minimal overhead for maximum performance
+
+This approach enables dynamic routing rule distribution across edge environments while seamlessly integrating with existing development and configuration platforms.
+
+---
 
 ## 📥 Installation
 
 ```bash
-npm install unieo --save
+npm install @unieojs/unieo --save
 ```
 
 ## 🏃‍♂️ Quick Start
@@ -28,6 +80,11 @@ npm install unieo --save
 > 🚧 **Simplifying in Progress** - The current route configuration schema is relatively complex. We are developing a more concise and intuitive routing API. Stay tuned! You'll be able to achieve the same functionality with much less code in the future.
 
 ### 💡 Basic Usage
+
+This example demonstrates a health check route that matches when the request URL path equals `/health` and rewrites the response header `content-type` to `application/json`:
+
+- **Match condition**: `origin.source: 'path'` extracts the URL path, `criteria.source: '/health'` defines the target value, `operator: 'equal'` performs exact matching
+- **Response rewrite**: Sets the `content-type` header to `application/json` when the route matches
 
 ```typescript
 import { Route } from 'unieo';
@@ -79,11 +136,14 @@ addEventListener('fetch', (event: FetchEvent) => {
 });
 ```
 
-## 🎨 Use Cases
+## 🎨 Real-World Examples
 
-### 🌐 1. API Gateway
+### 🌐 API Gateway
 
 Perfect for building API gateways that need request routing, authentication, and response transformation:
+
+- **Match logic**: Uses `operator: 'regexp'` to match paths starting with `/api/private` using the pattern `^/api/private`
+- **Request rewrite**: Adds `x-auth-required: true` header to mark the request as requiring authentication
 
 ```typescript
 const apiGatewayRoutes = [
@@ -121,9 +181,12 @@ const apiGatewayRoutes = [
 ];
 ```
 
-### 🚀 2. CDN Edge Logic
+### 🚀 CDN Edge Logic
 
 Implement sophisticated CDN logic with cache control and content optimization:
+
+- **Match logic**: Uses `operator: 'regexp'` with pattern `\\.(jpg|jpeg|png|webp)$` to match image file extensions
+- **Middleware chain**: Applies `ImageOptimization` middleware with quality settings, followed by `DefaultFetch`
 
 ```typescript
 const cdnRoutes = [
@@ -166,9 +229,14 @@ const cdnRoutes = [
 ];
 ```
 
-### 🧪 3. A/B Testing and Feature Flags
+### 🧪 A/B Testing
 
 Implement dynamic A/B testing based on user characteristics:
+
+- **Match logic**: Combines two conditions with `operator: 'and'`:
+  - Checks `x-user-segment` header equals `beta` 
+  - Checks URL path starts with `/app` using `operator: 'prefix'`
+- **URL rewrite**: Redirects matching requests to `/app-beta` path
 
 ```typescript
 const abTestingRoutes = [
@@ -211,9 +279,12 @@ const abTestingRoutes = [
 ];
 ```
 
-### 📱 4. Device-Based Routing
+### 📱 Device-Based Routing
 
 Route requests based on device characteristics for optimal user experience:
+
+- **Match logic**: Uses `sourceType: 'device'` with `source: 'type'` to detect device type, matches when equal to `mobile`
+- **Request rewrite**: Adds `x-mobile-optimized: true` header for mobile-specific processing
 
 ```typescript
 const deviceRoutes = [
@@ -251,9 +322,12 @@ const deviceRoutes = [
 ];
 ```
 
-### 🌍 5. Geographical Content Delivery
+### 🌍 Geo-based Routing
 
 Serve localized content based on user location:
+
+- **Match logic**: Uses `sourceType: 'edge_info'` with `source: 'country'` to get user's country, checks if it's `in` the EU region
+- **Response rewrite**: Sets `x-privacy-policy: gdpr-compliant` header for EU users
 
 ```typescript
 const geoRoutes = [
