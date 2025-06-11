@@ -1,8 +1,10 @@
 import type { ILogger } from '../../../types';
-import type { RawRedirect, Redirect } from '../../Redirect';
+import type { RawRedirect } from '../../Redirect';
+import { Redirect } from '../../Redirect';
 import type { RouteContext } from '../../RouteContext';
 import { BaseMeta } from './BaseMeta';
 import { RouteMeta } from './decorators';
+import type { BaseProcessor } from '../processor/BaseProcessor';
 
 @RouteMeta('redirects')
 export class RedirectMeta extends BaseMeta {
@@ -12,9 +14,10 @@ export class RedirectMeta extends BaseMeta {
     type: string;
     logger: ILogger;
     data: RawRedirect[];
+    processor: BaseProcessor;
   }) {
     super(options);
-    this.redirects = options.data.map(raw => new Redirect(raw));
+    this.redirects = options.data.map(raw => new Redirect(raw, options.processor));
   }
 
   public async process(ctx: RouteContext): Promise<Response | undefined> {

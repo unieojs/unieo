@@ -3,9 +3,9 @@ import { Value } from './Value';
 import { Match } from './Match';
 import type { ValueRawData } from './Value';
 import type { RouteContext } from './RouteContext';
-import type { BaseProcessor } from './Processor';
 import type { RawMatch } from './Match';
 import { isNil } from 'lodash';
+import type { BaseProcessor } from './new_processor/processor/BaseProcessor';
 
 export interface RawResponseRewrite {
   // 覆写类型

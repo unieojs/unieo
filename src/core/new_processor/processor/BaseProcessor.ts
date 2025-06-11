@@ -10,7 +10,7 @@ export interface RawProcessorData {
   logger: ILogger;
   ctx: RouteContext;
   meta: Record<string, unknown>; // 直接对应 Route JSON 中的 meta 字段
-  args: object;
+  args: Record<string, unknown>;
   match?: RawMatch;
 }
 
@@ -19,8 +19,9 @@ export abstract class BaseProcessor {
   protected readonly type: string;
   public readonly break: boolean;
   public readonly weakDep?: boolean;
-  protected readonly logger: ILogger;
+  public readonly logger: ILogger;
   protected readonly rawMeta: Record<string, unknown>;
+  public args: Record<string, unknown>;
   protected readonly match?: Match;
 
   protected constructor(data: RawProcessorData) {
@@ -30,6 +31,7 @@ export abstract class BaseProcessor {
     this.weakDep = data.weakDep;
     this.logger = data.logger;
     this.rawMeta = data.meta;
+    this.args = data.args;
     if (data.match) {
       this.match = new Match(data.match, this);
     }

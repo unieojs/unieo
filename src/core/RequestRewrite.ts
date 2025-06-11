@@ -6,13 +6,13 @@ import { rewritePath, rewriteUrl } from '../util/PathRegexp';
 import type { ValueRawData } from './Value';
 import type { RouteContext } from './RouteContext';
 import { appendSearchParams, isValidUrl } from '../util/Url';
-import type { BaseProcessor } from './Processor';
 import type { BaseMiddlewareOption, MiddlewareConfig, RawMiddleware } from '../middleware/types';
 import pMap from 'p-map';
 import type { RawMatch } from './Match';
 import { filterUndefined } from '../util/Array';
 import { appendHeader, getOriginalHeaderObj } from '../util/Header';
 import type { PathRegexpConfig } from '../util/PathRegexp';
+import type { BaseProcessor } from './new_processor/processor/BaseProcessor';
 
 export interface RawRequestRewrite {
   // 覆写类型

@@ -1,5 +1,6 @@
 import type { ILogger } from '../../../types';
 import type { RouteContext } from '../../RouteContext';
+import type { BaseProcessor } from '../processor/BaseProcessor';
 
 export abstract class BaseMeta {
   protected readonly type: string;
@@ -8,6 +9,7 @@ export abstract class BaseMeta {
   protected constructor(options: {
     type: string;
     logger: ILogger;
+    processor: BaseProcessor
     data: unknown;
   }) {
     this.type = options.type;

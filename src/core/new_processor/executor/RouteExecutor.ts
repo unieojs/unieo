@@ -1,6 +1,6 @@
 import type { RouteProcessor } from '../processor/RouteProcessor';
 import type { RouteContext } from '../../RouteContext';
-import { getGroupExecutors } from './decorators';
+import { getRouteMetaExecutors } from './decorators';
 import { ErrorCode, genError } from '../../../common/Error';
 
 export class RouteExecutor {
@@ -18,7 +18,7 @@ export class RouteExecutor {
       throw genError(ErrorCode.SystemError, 'No meta type found in request headers');
     }
 
-    const registeredExecutors = getGroupExecutors();
+    const registeredExecutors = getRouteMetaExecutors();
     const ExecutorClass = registeredExecutors.get(type);
 
     if (!ExecutorClass) {

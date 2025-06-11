@@ -2,10 +2,8 @@ import type { SubProcessor } from '../processor/SubProcessor';
 import type { RouteContext } from '../../RouteContext';
 import type { ExecuteResult } from './decorators';
 import { BaseSubExecutor } from './decorators';
-import { SubExecutor } from './decorators';
 import { ErrorCode, genError } from '../../../common/Error';
 
-@SubExecutor('redirects')
 export class RedirectSubExecutor extends BaseSubExecutor {
   constructor(options: {
     subProcessor: SubProcessor;

@@ -1,9 +1,10 @@
 import type { GroupProcessor } from '../processor/GroupProcessor';
 import type { RouteContext } from '../../RouteContext';
 import type { ExecuteResult } from './decorators';
-import { BaseGroupExecutor, GroupExecutor } from './decorators';
+import { BaseGroupExecutor, RouteMetaExecutor } from './decorators';
+import { RedirectSubExecutor } from './RedirectSubExecutor';
 
-@GroupExecutor('redirects')
+@RouteMetaExecutor('redirects')
 export class RedirectGroupExecutor extends BaseGroupExecutor {
   constructor(options: {
     groupProcessor: GroupProcessor;
@@ -32,10 +33,9 @@ export class RedirectGroupExecutor extends BaseGroupExecutor {
     result.break = this.groupProcessor.break;
 
     for (const subProcessor of this.groupProcessor.subProcessors) {
-      const subExecutor = this.subExecutors.get('redirects');
-      if (!subExecutor) {
-        continue;
-      }
+      const subExecutor = new RedirectSubExecutor({
+        subProcessor,
+      });
 
       const subResult = await subExecutor.execute(ctx);
       result.success = subResult.success;
@@ -45,7 +45,7 @@ export class RedirectGroupExecutor extends BaseGroupExecutor {
       }
 
       result.result = subResult.result;
-      result.break = subResult.breakGroup;
+      result.break = !!subResult.breakGroup;
       if (subResult.break) {
         break;
       }
