@@ -2,10 +2,6 @@
 <h1>🍥 Unieo</h1>
 💪🏻 A schema-driven routing engine for edge computing environments.
 </div>
-
-> [!WARNING]
-> **Development Notice**: Unieo is currently under active development, APIs may change before the 1.0 release.
-
 <br>
 
 Unieo `[/juːniˈoʊ/]` brings code-free routing management to edge computing, with built-in **[WinterTC standards](https://wintertc.org/)** compliance for seamless deployment across Cloudflare Workers, Vercel Edge Functions, Aliyun EdgeRoutine, and other modern edge runtimes.
@@ -84,6 +80,9 @@ npm install @unieojs/unieo --save
 > 🚧 **Simplifying in Progress** - The current route configuration schema is relatively complex. We are developing a more concise and intuitive routing API. Stay tuned! You'll be able to achieve the same functionality with much less code in the future.
 
 ### 💡 Basic Usage
+
+> [!WARNING]
+> **Development Notice**: Unieo is currently under active development, APIs may change before the 1.0 release.
 
 This example demonstrates a health check route that matches when the request URL path equals `/health` and rewrites the response header `content-type` to `application/json`:
 
