@@ -14,7 +14,7 @@ export class GroupProcessor extends BaseProcessor {
     this.subProcessors = options.subProcessors;
   }
 
-  public needExecuteMeta(type: string): boolean {
-    return this.subProcessors.some(sp => sp.needExecuteMeta(type));
+  public needProcessMeta(type: string): boolean {
+    return this.subProcessors.some(sp => sp.needProcessMeta(type));
   }
 }

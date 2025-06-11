@@ -1,0 +1,28 @@
+import type { ILogger } from '../../../types';
+import type { BaseMeta } from './BaseMeta';
+
+type MetaConstructor = new (options: {
+  type: string;
+  logger: ILogger;
+  data: any;
+}) => BaseMeta;
+
+// 存储所有注册的 Meta 构造函数
+const metaConstructors = new Map<string, MetaConstructor>();
+
+// 装饰器工厂函数
+export function RouteMeta(type: string) {
+  return function (constructor: new (options: {
+    type: string;
+    logger: ILogger;
+    data: any;
+  }) => any) {
+    // 注册到 map 中
+    metaConstructors.set(type, constructor);
+  };
+}
+
+// 获取所有注册的 Meta 构造函数
+export function getMetaConstructors(): Map<string, MetaConstructor> {
+  return metaConstructors;
+}

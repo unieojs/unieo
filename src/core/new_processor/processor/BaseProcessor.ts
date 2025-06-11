@@ -1,8 +1,6 @@
 import type { RawMatch, RouteContext } from '../../../core';
 import { Match } from '../../Match';
 import type { ILogger } from '../../../types';
-import { MetaManager } from '../meta/MetaManager';
-import type { BaseMeta } from '../meta/BaseMeta';
 
 export interface RawProcessorData {
   name: string;

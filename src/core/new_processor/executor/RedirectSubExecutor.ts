@@ -1,44 +1,44 @@
 import type { SubProcessor } from '../processor/SubProcessor';
-import { ErrorCode, genError } from '../../../common/Error';
 import type { RouteContext } from '../../RouteContext';
+import type { ExecuteResult } from './decorators';
+import { BaseSubExecutor } from './decorators';
+import { SubExecutor } from './decorators';
+import { ErrorCode, genError } from '../../../common/Error';
 
-export interface ExecuteResult<T> {
-  success: boolean;
-  break: boolean;
-  breakGroup: boolean;
-  result?: T;
-}
-
-export class SubExecutor {
-  private readonly subProcessor: SubProcessor;
-
+@SubExecutor('redirects')
+export class RedirectSubExecutor extends BaseSubExecutor {
   constructor(options: {
     subProcessor: SubProcessor;
   }) {
-    this.subProcessor = options.subProcessor;
+    super(options);
   }
 
-  public async executeMeta<T>(type: string, ctx: RouteContext) {
-    const result: ExecuteResult<T> = {
+  public async execute(ctx: RouteContext): Promise<ExecuteResult> {
+    const result: ExecuteResult = {
       success: true,
       break: false,
       breakGroup: false,
     };
-    if (!this.subProcessor.needExecuteMeta(type)) {
+
+    if (!this.subProcessor.needProcessMeta('redirects')) {
       return result;
     }
+
     const matchResult = await this.subProcessor.checkMatch(ctx);
     if (!matchResult) {
       ctx.logger.info('not match, skipped');
       return result;
     }
-    ctx.logger.info(`${type} started`);
+
+    ctx.logger.info('redirect started');
+    result.break = this.subProcessor.break;
+    result.breakGroup = this.subProcessor.breakGroup;
+
     try {
-      result.result = await this.subProcessor.executeMeta(type, ctx) as T;
-      // 重定向命中后，默认 break 和 breakGroup
+      result.result = await this.subProcessor.processMeta('redirects', ctx);
       result.break = !!result.result;
       result.breakGroup = result.break;
-      ctx.logger.info(`${type} succeed`);
+      ctx.logger.info('redirect succeed');
     } catch (err) {
       const error = genError(ErrorCode.SubRouteRedirectError, {
         message: (err as Error).message,

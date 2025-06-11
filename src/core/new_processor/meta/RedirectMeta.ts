@@ -1,8 +1,10 @@
 import type { ILogger } from '../../../types';
 import type { RawRedirect, Redirect } from '../../Redirect';
-import type  { RouteContext } from '../../RouteContext';
+import type { RouteContext } from '../../RouteContext';
 import { BaseMeta } from './BaseMeta';
+import { RouteMeta } from './decorators';
 
+@RouteMeta('redirects')
 export class RedirectMeta extends BaseMeta {
   private readonly redirects: Redirect[];
 
@@ -15,17 +17,7 @@ export class RedirectMeta extends BaseMeta {
     this.redirects = options.data.map(raw => new Redirect(raw));
   }
 
-  public static create(
-    options: {
-      type: string;
-      logger: ILogger;
-      data: RawRedirect[];
-    },
-  ): RedirectMeta {
-    return new RedirectMeta(options);
-  }
-
-  public async execute(ctx: RouteContext): Promise<Response | null> {
+  public async process(ctx: RouteContext): Promise<Response | undefined> {
     for (const redirect of this.redirects) {
       const res = await redirect.redirect(ctx);
       if (res) {
@@ -33,10 +25,9 @@ export class RedirectMeta extends BaseMeta {
         return res;
       }
     }
-    return null;
   }
 
-  public needExecute(): boolean {
+  public needProcess(): boolean {
     return this.redirects.length > 0;
   }
 }

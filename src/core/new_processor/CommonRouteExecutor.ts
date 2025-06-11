@@ -1,7 +1,7 @@
 import type { RouteExecutor } from './executor/RouteExecutor';
 import type { RouteContext } from '../RouteContext';
 
-export class CommonRouteExecutor {
+export class PackRouteExecutor {
   private routeExecutor: RouteExecutor;
   private readonly ctx: RouteContext;
 
@@ -18,7 +18,7 @@ export class CommonRouteExecutor {
   }
 
   public async beforeRequest() {
-    await this.routeExecutor.executeMeta('beforeRequest', this.ctx);
+    await this.routeExecutor.executeMeta('requestRewrites', this.ctx);
   }
 
   public async beforeResponse() {
