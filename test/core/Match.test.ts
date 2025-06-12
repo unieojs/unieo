@@ -711,7 +711,7 @@ describe('test/core/Match.test.ts', () => {
 
   it('should not_prefix work', async () => {
     const ctx = TestUtil.mockRouteContext({
-      url: 'https://render.example.com/rsc/xxx',
+      url: 'https://render.example.com/other/xxx',
     });
 
     let match = new Match(

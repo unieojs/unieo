@@ -15,7 +15,7 @@ export interface RouteContextRawData {
   helper: RouteHelper;
   event: FetchEvent;
   performance: ERPerformance;
-  presetMiddlewares?: [string, MiddlewareGen][];
+  middlewares?: [string, MiddlewareGen][];
 }
 
 export class RouteContext {
@@ -39,7 +39,7 @@ export class RouteContext {
     this.httpClient = data.helper.httpClient;
     this.logger = data.helper.logger;
     this.middlewareManager = new MiddlewareManager({
-      presetMiddlewares: data.presetMiddlewares,
+      middlewares: data.middlewares,
     });
     this.#request = data.request;
     this.#requestUrl = new URL(this.#request.url);

@@ -44,11 +44,11 @@ export class RedirectHelper {
     this.type = raw.type;
     this.passQuery = raw.passQuery !== false;
     this.destination = raw.destination;
-    if (isValidUrl(raw.destination)) {
-      const protocol = getProtocol(raw.destination);
+    if (this.destination && isValidUrl(this.destination)) {
+      const protocol = getProtocol(this.destination);
       if (!HTTP_PROTOCOL.includes(protocol)) {
         this.originalDestinationProtocol = protocol;
-        this.destination = raw.destination.replace(this.originalDestinationProtocol, FAKE_DESTINATION_PROTOCOL);
+        this.destination = this.destination.replace(this.originalDestinationProtocol, FAKE_DESTINATION_PROTOCOL);
       }
     }
   }
