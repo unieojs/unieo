@@ -1,6 +1,6 @@
 <div align="center">
 <h1>🍥 Unieo</h1>
-💪🏻 A schema-driven routing engine for edge computing environments.
+🐚 A schema-driven routing engine for edge computing environments.
 </div>
 <br>
 
@@ -12,12 +12,12 @@ Unieo `[/juːniˈoʊ/]` brings code-free routing management to edge computing, w
 
 Edge computing runs your code at data centers closest to your users, rather than in a single centralized location. This distributed approach delivers faster response times and better user experiences globally.
 
-**The Benefits:**
-- 🚀 **Lower Latency** - Users connect to nearby servers instead of distant ones
-- 🌍 **Global Scale** - Deploy once and run everywhere automatically
-- 💪 **Improved Performance** - Faster page loads and better user experience
+The Benefits:
+- 🚀 Lower Latency - Users connect to nearby servers instead of distant ones
+- 🌍 Global Scale - Deploy once and run everywhere automatically
+- 💪 Improved Performance - Faster page loads and better user experience
 
-Popular edge platforms include **Cloudflare Workers**, **Vercel Edge Functions**, and **Aliyun EdgeRoutine**.
+Popular edge platforms include Cloudflare Workers, Vercel Edge Functions, and Aliyun EdgeRoutine.
 
 ### 🎯 The Routing Challenge
 
