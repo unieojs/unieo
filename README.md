@@ -67,8 +67,6 @@ Unieo separates routing logic from application code through declarative configur
 
 This approach enables dynamic routing rule distribution across edge environments while seamlessly integrating with existing development and configuration platforms.
 
----
-
 ## 📥 Installation
 
 ```bash
