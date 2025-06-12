@@ -1,5 +1,5 @@
-import { BaseProcessor } from '../../../src';
-import { HostInfo } from './HostInfo';
+import type { HostInfo } from './HostInfo';
+import type { BaseProcessor } from '../../../src/core/new_processor/processor/BaseProcessor';
 
 export interface RawHostInfoRewrite {
   field: string;

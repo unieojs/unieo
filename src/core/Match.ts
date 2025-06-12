@@ -3,9 +3,9 @@ import { match } from 'path-to-regexp';
 import { MatchOperator, Operator, ValueType } from '../common/Enum';
 import { Value } from './Value';
 import type { ILogger } from '../types';
-import type { BaseProcessor } from './Processor';
 import type { RouteContext } from './RouteContext';
 import type { ValueRawData } from './Value';
+import type { BaseProcessor } from './new_processor/processor/BaseProcessor';
 
 export interface RawMatch {
   list: (RawMatchItem | RawMatch)[];

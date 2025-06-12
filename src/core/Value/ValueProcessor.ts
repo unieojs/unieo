@@ -1,8 +1,8 @@
 import { Match } from '../Match';
 import { isNil, isObject, isString } from 'lodash';
 import type { RouteContext } from '../RouteContext';
-import type { BaseProcessor } from '../Processor';
 import type { RawMatch } from '../Match';
+import type { BaseProcessor } from '../new_processor/processor/BaseProcessor';
 
 export interface IValueProcessor {
   getValue(value: unknown, ctx: RouteContext, processor: BaseProcessor): Promise<unknown>;
