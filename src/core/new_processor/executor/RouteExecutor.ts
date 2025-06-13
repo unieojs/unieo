@@ -12,8 +12,7 @@ export class RouteExecutor {
     this.routeProcessor = options.routeProcessor;
   }
 
-  public async executeMeta(ctx: RouteContext): Promise<void> {
-    const type = ctx.request.headers.get('x-meta-type');
+  public async execute(type: string, ctx: RouteContext): Promise<void> {
     if (!type) {
       throw genError(ErrorCode.SystemError, 'No meta type found in request headers');
     }

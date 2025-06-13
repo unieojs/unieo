@@ -14,15 +14,15 @@ export class PackRouteExecutor {
   }
 
   public async redirect() {
-    await this.routeExecutor.executeMeta('redirects', this.ctx);
+    await this.routeExecutor.execute('redirects', this.ctx);
   }
 
   public async beforeRequest() {
-    await this.routeExecutor.executeMeta('requestRewrites', this.ctx);
+    await this.routeExecutor.execute('requestRewrites', this.ctx);
   }
 
   public async beforeResponse() {
-    await this.routeExecutor.executeMeta('beforeResponse', this.ctx);
+    await this.routeExecutor.execute('beforeResponse', this.ctx);
   }
 
   public async request() {

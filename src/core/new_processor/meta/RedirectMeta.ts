@@ -13,6 +13,7 @@ export class RedirectMeta extends BaseMeta {
   constructor(options: {
     type: string;
     logger: ILogger;
+    ctx: RouteContext;
     data: RawRedirect[];
     processor: BaseProcessor;
   }) {

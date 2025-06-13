@@ -1,10 +1,12 @@
 import type { ILogger } from '../../../types';
 import type { BaseMeta } from './BaseMeta';
 import type { BaseProcessor } from '../processor/BaseProcessor';
+import type { RouteContext } from '../../RouteContext';
 
 type MetaConstructor = new (options: {
   type: string;
   logger: ILogger;
+  ctx: RouteContext;
   data: any;
   processor: BaseProcessor;
 }) => BaseMeta;
@@ -17,6 +19,7 @@ export function RouteMeta(type: string) {
   return function (constructor: new (options: {
     type: string;
     logger: ILogger;
+    ctx: RouteContext;
     data: any;
     processor: BaseProcessor;
   }) => BaseMeta) {
