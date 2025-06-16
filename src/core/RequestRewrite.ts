@@ -10,7 +10,7 @@ import type { BaseMiddlewareOption, MiddlewareConfig, RawMiddleware } from '../m
 import pMap from 'p-map';
 import type { RawMatch } from './Match';
 import { filterUndefined } from '../util/Array';
-import { appendHeader, getOriginalHeaderObj } from '../util/Header';
+import { appendHeader, getReqHeaderObj } from '../util/Header';
 import type { PathRegexpConfig } from '../util/PathRegexp';
 import type { BaseProcessor } from './new_processor/processor/BaseProcessor';
 
@@ -103,7 +103,7 @@ export class RequestRewrite {
     // url 一旦改变，需要重新创建 request，不再基于原始的 request
     return new Request(url.toString(), {
       method: request.method,
-      headers: getOriginalHeaderObj(request.headers),
+      headers: getReqHeaderObj(request.headers),
       redirect: request.redirect,
       body: request.body,
     });

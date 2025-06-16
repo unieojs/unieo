@@ -5,12 +5,14 @@ import { CommonGroupProcessor, CommonSubProcessor } from './processor';
 import { RouteExecutor } from './executor';
 import type { GroupRouteConfig } from './core';
 import type { ERFetchEvent, HttpClient, ILogger } from './types';
+import type { MiddlewareGen } from './middleware/types';
 
 interface RouteRawData {
   event: ERFetchEvent;
   logger?: ILogger;
   httpClient?: HttpClient;
   performance?: ERPerformance;
+  middlewares?: [string, MiddlewareGen][];
 }
 
 export class Route {
@@ -22,6 +24,7 @@ export class Route {
       event: data.event,
       request: data.event.request,
       performance: data.performance ?? new ERPerformance(),
+      middlewares: data.middlewares,
       helper: {
         logger: data.logger ?? console,
         httpClient: data.httpClient ?? {
