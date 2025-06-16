@@ -3,10 +3,8 @@ import type { RawRedirect } from '../../Redirect';
 import { Redirect } from '../../Redirect';
 import type { RouteContext } from '../../RouteContext';
 import { BaseMeta } from './BaseMeta';
-import { RouteMeta } from './decorators';
-import type { BaseProcessor } from '../processor/BaseProcessor';
+import type { BaseProcessor } from '../processor';
 
-@RouteMeta('redirects')
 export class RedirectMeta extends BaseMeta {
   private readonly redirects: Redirect[];
 
@@ -21,9 +19,9 @@ export class RedirectMeta extends BaseMeta {
     this.redirects = options.data.map(raw => new Redirect(raw, options.processor));
   }
 
-  public async process(ctx: RouteContext): Promise<Response | undefined> {
+  public async process(): Promise<Response | undefined> {
     for (const redirect of this.redirects) {
-      const res = await redirect.redirect(ctx);
+      const res = await redirect.redirect(this.ctx);
       if (res) {
         // 重定向生效，跳过后续
         return res;

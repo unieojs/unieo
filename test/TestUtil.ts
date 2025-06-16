@@ -1,17 +1,7 @@
-import {
-  type GroupRouteConfig,
-  type RawRedirect,
-  type RawRequestRewrite,
-  type RawResponseRewrite,
-  RouteContext,
-  type SubProcessor,
-  type SubRouteConfig,
-} from '../src/core';
+import { type RawRedirect, type RawRequestRewrite, type RawResponseRewrite, RouteContext } from '../src/core';
 import { type ERFetchEvent, type RouteHelper } from '../src/types';
 import { ERPerformance } from '../src/core/ERPerformance';
 import { ERHttpClient } from '../src/core/Fetch';
-import { CommonGroupProcessor, CommonSubProcessor } from '../src/processor';
-import { RouteProcessor, type RouteProcessorRawData } from '../src/processor/RouteProcessor';
 import {
   GroupProcessorType,
   RedirectType,
@@ -23,6 +13,9 @@ import {
   SubProcessorType,
   ValueSourceType,
 } from '../src/common/Enum';
+import type { GroupRawRoute, SubRawRoute, RouteProcessorData } from '../src/core/new_processor';
+import { RouteProcessor } from '../src/core/new_processor';
+import { GroupProcessor, SubProcessor } from '../src/core/new_processor';
 
 export const fetchMock = getMiniflareFetchMock();
 fetchMock.disableNetConnect();
@@ -106,19 +99,19 @@ export class TestUtil {
     ];
   }
 
-  static mockCommonSubProcessor(ctx?: RouteContext, subRouteConfig?: Partial<SubRouteConfig>): CommonSubProcessor {
+  static mockCommonSubProcessor(ctx?: RouteContext, subRouteConfig?: Partial<SubRawRoute>): SubProcessor {
     ctx = ctx ?? TestUtil.mockRouteContext();
-    return CommonSubProcessor.create(ctx, TestUtil.mockSubRouteConfig(subRouteConfig), TestUtil.mockHelper());
+    return SubProcessor.create(ctx, TestUtil.mockSubRouteConfig(subRouteConfig), TestUtil.mockHelper());
   }
 
   static mockCommonGroupProcessor(
     ctx?: RouteContext,
-    groupRouteConfig?: Partial<GroupRouteConfig>,
+    groupRouteConfig?: Partial<GroupRawRoute>,
     subProcessors?: SubProcessor[],
-  ): CommonGroupProcessor {
+  ): GroupProcessor {
     ctx = ctx ?? TestUtil.mockRouteContext();
     subProcessors = subProcessors ?? [ TestUtil.mockCommonSubProcessor(ctx) ];
-    return CommonGroupProcessor.create(
+    return GroupProcessor.create(
       ctx,
       TestUtil.mockGroupRouteConfig(groupRouteConfig),
       subProcessors,
@@ -126,15 +119,14 @@ export class TestUtil {
     );
   }
 
-  static mockRouteProcessor(data?: Partial<RouteProcessorRawData>): RouteProcessor {
+  static mockRouteProcessor(data?: Partial<RouteProcessorData>): RouteProcessor {
     return new RouteProcessor({
       groupProcessors: [ TestUtil.mockCommonGroupProcessor() ],
-      helper: TestUtil.mockHelper(),
       ...data,
     });
   }
 
-  static mockSubRouteConfig(info?: Partial<SubRouteConfig>): SubRouteConfig {
+  static mockSubRouteConfig(info?: Partial<SubRawRoute>): SubRawRoute {
     return {
       name: 'mock_name',
       type: 'mock_type',
@@ -150,7 +142,7 @@ export class TestUtil {
     };
   }
 
-  static mockGroupRouteConfig(info?: Partial<GroupRouteConfig>): GroupRouteConfig {
+  static mockGroupRouteConfig(info?: Partial<GroupRawRoute>): GroupRawRoute {
     return {
       name: 'mock_name',
       type: 'mock_type',

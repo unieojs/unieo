@@ -1,6 +1,6 @@
-import { describe, it, assert } from 'vitest';
+import { assert, describe, it } from 'vitest';
 import { TestUtil } from '../../TestUtil';
-import { ValueSourceType } from '../../../src/common/Enum';
+import { Operator, ValueSourceType } from '../../../src/common/Enum';
 
 describe('test/processor/group/CommonGroupProcessor.test.ts', () => {
   it('should checkMatch work', async () => {
@@ -22,7 +22,7 @@ describe('test/processor/group/CommonGroupProcessor.test.ts', () => {
                   source: 'bar',
                   sourceType: ValueSourceType.LITERAL,
                 },
-                operator: 'equal',
+                operator: Operator.EQUAL,
               },
             ],
           },

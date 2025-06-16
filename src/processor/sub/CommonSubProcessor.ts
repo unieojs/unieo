@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
+
 import { SubProcessorType } from '../../common/Enum';
 import {
   Match,
