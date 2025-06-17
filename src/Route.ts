@@ -1,11 +1,10 @@
-import { RouteContext } from './core';
-import { ProcessorFactory } from './processor/Factory';
+import type { GroupRawRoute } from './core';
+import { GroupProcessor, ProcessorFactory, RouteContext, SubProcessor } from './core';
 import { ERPerformance } from './core/ERPerformance';
-import { CommonGroupProcessor, CommonSubProcessor } from './processor';
-import { RouteExecutor } from './executor';
-import type { GroupRouteConfig } from './core';
 import type { ERFetchEvent, HttpClient, ILogger } from './types';
-import type { MiddlewareGen } from './middleware/types';
+import type { MiddlewareGen } from './middleware';
+import { GroupProcessorType, SubProcessorType } from './common/Enum';
+import { CommonRouteExecutor } from './core/CommonRouteExecutor';
 
 interface RouteRawData {
   event: ERFetchEvent;
@@ -43,15 +42,18 @@ export class Route {
   }
 
   private registerProcessor() {
-    this.#processorFactory.registerGroupProcessor(CommonGroupProcessor.processorType, CommonGroupProcessor.create);
-    this.#processorFactory.registerSubProcessor(CommonSubProcessor.processorType, CommonSubProcessor.create);
+    this.#processorFactory.registerGroupProcessor(GroupProcessorType.COMMON_GROUP_PROCESSOR, GroupProcessor.create);
+    this.#processorFactory.registerSubProcessor(SubProcessorType.COMMON_SUB_PROCESSOR, SubProcessor.create);
   }
 
-  async execute(routes: GroupRouteConfig[]) {
+  async execute(routes: GroupRawRoute[]) {
     const processor = this.#processorFactory.createRouteProcessor(this.ctx, {
       routes,
     });
-    const executor = new RouteExecutor(processor, { ctx: this.#ctx });
+    const executor = new CommonRouteExecutor({
+      processor,
+      ctx: this.#ctx,
+    });
     await executor.execute();
     return this.#ctx.response;
   }

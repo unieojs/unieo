@@ -1,5 +1,5 @@
-import { type RawRedirect, type RawRequestRewrite, type RawResponseRewrite, RouteContext } from '../src/core';
-import { type ERFetchEvent, type RouteHelper } from '../src/types';
+import { GroupProcessor, RouteContext, RouteProcessor, SubProcessor } from '../src';
+import type { ERFetchEvent, RouteHelper } from '../src/types';
 import { ERPerformance } from '../src/core/ERPerformance';
 import { ERHttpClient } from '../src/core/Fetch';
 import {
@@ -13,9 +13,7 @@ import {
   SubProcessorType,
   ValueSourceType,
 } from '../src/common/Enum';
-import type { GroupRawRoute, SubRawRoute, RouteProcessorData } from '../src/core/new_processor';
-import { RouteProcessor } from '../src/core/new_processor';
-import { GroupProcessor, SubProcessor } from '../src/core/new_processor';
+import type { GroupRawRoute, SubRawRoute, RouteProcessorData , RawRedirect, RawRequestRewrite, RawResponseRewrite } from '../src';
 
 export const fetchMock = getMiniflareFetchMock();
 fetchMock.disableNetConnect();

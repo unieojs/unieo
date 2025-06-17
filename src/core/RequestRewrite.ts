@@ -1,9 +1,9 @@
 import { isNil, isObject, isString } from 'lodash';
 import { RequestInitValueType, RequestRewriteType, RewriteOperation, UrlValueType } from '../common/Enum';
-import { Value } from './Value';
+import { Value } from './value';
 import { Match } from './Match';
 import { rewritePath, rewriteUrl } from '../util/PathRegexp';
-import type { ValueRawData } from './Value';
+import type { ValueRawData } from './value';
 import type { RouteContext } from './RouteContext';
 import { appendSearchParams, isValidUrl } from '../util/Url';
 import type { BaseMiddlewareOption, MiddlewareConfig, RawMiddleware } from '../middleware/types';
@@ -12,7 +12,7 @@ import type { RawMatch } from './Match';
 import { filterUndefined } from '../util/Array';
 import { appendHeader, getReqHeaderObj } from '../util/Header';
 import type { PathRegexpConfig } from '../util/PathRegexp';
-import type { BaseProcessor } from './new_processor/processor/BaseProcessor';
+import type { BaseProcessor } from './processor';
 
 export interface RawRequestRewrite {
   // 覆写类型

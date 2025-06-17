@@ -1,11 +1,11 @@
 import { ResponseRewriteOperation, ResponseRewriteType } from '../common/Enum';
-import { Value } from './Value';
+import { Value } from './value';
 import { Match } from './Match';
-import type { ValueRawData } from './Value';
+import type { ValueRawData } from './value';
 import type { RouteContext } from './RouteContext';
 import type { RawMatch } from './Match';
 import { isNil } from 'lodash';
-import type { BaseProcessor } from './new_processor/processor/BaseProcessor';
+import type { BaseProcessor } from './processor';
 
 export interface RawResponseRewrite {
   // 覆写类型

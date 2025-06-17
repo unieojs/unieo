@@ -1,11 +1,11 @@
 import { isArray, isNil, isString } from 'lodash';
 import { match } from 'path-to-regexp';
 import { MatchOperator, Operator, ValueType } from '../common/Enum';
-import { Value } from './Value';
+import { Value } from './value';
 import type { ILogger } from '../types';
 import type { RouteContext } from './RouteContext';
-import type { ValueRawData } from './Value';
-import type { BaseProcessor } from './new_processor/processor/BaseProcessor';
+import type { ValueRawData } from './value';
+import type { BaseProcessor } from './processor';
 
 export interface RawMatch {
   list: (RawMatchItem | RawMatch)[];
