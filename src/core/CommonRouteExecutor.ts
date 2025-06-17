@@ -4,8 +4,8 @@ import { MetaType } from './meta/enum';
 import type { RouteProcessor } from './processor';
 
 export class CommonRouteExecutor {
-  private routeExecutor: RouteExecutor;
-  private readonly ctx: RouteContext;
+  protected routeExecutor: RouteExecutor;
+  protected readonly ctx: RouteContext;
 
   constructor(options: {
     processor: RouteProcessor;
