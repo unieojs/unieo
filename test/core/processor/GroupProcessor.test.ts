@@ -1,8 +1,8 @@
-import { describe, it, assert } from 'vitest';
+import { assert, describe, it } from 'vitest';
 import { TestUtil } from '../../TestUtil';
-import { ValueSourceType } from '../../../src/common/Enum';
+import { Operator, ValueSourceType } from '../../../src/common/Enum';
 
-describe('test/processor/group/CommonGroupProcessor.test.ts', () => {
+describe('test/core/processor/GroupProcessor.test.ts', () => {
   it('should checkMatch work', async () => {
     const ctx = TestUtil.mockRouteContext({
       headers: { 'x-foo': 'bar' },
@@ -22,7 +22,7 @@ describe('test/processor/group/CommonGroupProcessor.test.ts', () => {
                   source: 'bar',
                   sourceType: ValueSourceType.LITERAL,
                 },
-                operator: 'equal',
+                operator: Operator.EQUAL,
               },
             ],
           },

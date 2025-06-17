@@ -1,4 +1,4 @@
-import { describe, it, assert } from 'vitest';
+import { assert, describe, it } from 'vitest';
 import { TestUtil } from '../../TestUtil';
 import {
   Operator,
@@ -9,7 +9,7 @@ import {
   ValueSourceType,
 } from '../../../src/common/Enum';
 
-describe('test/processor/sub/CommonSubProcessor.test.ts', () => {
+describe('test/core/processor/SubProcessor.test.ts', () => {
   it('should request write work', async () => {
     const ctx = TestUtil.mockRouteContext({
       url: 'https://www.example.com',
@@ -38,7 +38,7 @@ describe('test/processor/sub/CommonSubProcessor.test.ts', () => {
         ],
       },
     });
-    const request = await commonProcessor.beforeRequest(ctx.request);
+    const request = await commonProcessor.process('requestRewrites', ctx.request) as Request;
     assert.strictEqual(request.url, 'https://www.exampleplus.com/');
     assert.strictEqual(request.headers.get('x-foo'), 'bar');
   });
@@ -74,7 +74,7 @@ describe('test/processor/sub/CommonSubProcessor.test.ts', () => {
         ],
       },
     });
-    const response = await commonProcessor.redirect();
+    const response = await commonProcessor.process('redirects') as Response;
     assert(response);
     assert.strictEqual(response.status, 302);
     assert.strictEqual(response.headers.get('location'), 'https://www.example.com/new_a/index.html');
@@ -111,7 +111,7 @@ describe('test/processor/sub/CommonSubProcessor.test.ts', () => {
         ],
       },
     });
-    await commonProcessor.beforeResponse(ctx.response);
+    await commonProcessor.process('responseRewrites', ctx.response);
     assert.strictEqual(ctx.response!.headers.get('x-foo'), 'baz, 1');
   });
 

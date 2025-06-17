@@ -1,9 +1,9 @@
 import { Match } from './Match';
 import { RedirectHelper } from '../util/RedirectHelper';
 import type { RouteContext } from './RouteContext';
-import type { BaseProcessor } from './Processor';
 import type { RawMatch } from './Match';
 import type { RedirectData } from '../util/RedirectHelper';
+import type { BaseProcessor } from './processor';
 
 export interface RawRedirect extends RedirectData {
   // match 配置，做更精细的匹配

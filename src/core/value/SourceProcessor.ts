@@ -1,11 +1,11 @@
 import { Value } from '.';
 import { isObject, isString } from 'lodash';
 import type { RouteContext } from '../RouteContext';
-import type { BaseProcessor } from '../Processor';
 import type { UrlValueType } from '../../common/Enum';
 import type { IValue, ValueRawData } from '.';
 // import { parseUA } from '../../../util/UserAgent';
 import { esTemplate } from '../../util/Template';
+import type { BaseProcessor } from '../processor/BaseProcessor';
 
 export interface ISourceProcessor {
   getSource(value: IValue, ctx: RouteContext, processor: BaseProcessor): Promise<unknown>;

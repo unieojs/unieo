@@ -3,7 +3,7 @@ import { Value } from '../../src/core';
 import { UrlValueType, ValueSourceType, ValueType } from '../../src/common/Enum';
 import { fetchMock, TestUtil } from '../TestUtil';
 
-describe('test/core/Value.test.ts', () => {
+describe('test/core/value.test.ts', () => {
   it('should literal work', async () => {
     const ctx = TestUtil.mockRouteContext();
     const value = new Value(

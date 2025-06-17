@@ -92,7 +92,7 @@ export enum ValueSourceType {
   STRING_TEMPLATE = 'string_template',
   // locale
   LOCALE = 'locale',
-  // 嵌套 Value
+  // 嵌套 value
   VALUE_OBJECT = 'value_object',
 }
 

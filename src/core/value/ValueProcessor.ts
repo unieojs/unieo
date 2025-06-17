@@ -1,8 +1,8 @@
 import { Match } from '../Match';
 import { isNil, isObject, isString } from 'lodash';
 import type { RouteContext } from '../RouteContext';
-import type { BaseProcessor } from '../Processor';
 import type { RawMatch } from '../Match';
+import type { BaseProcessor } from '../processor/BaseProcessor';
 
 export interface IValueProcessor {
   getValue(value: unknown, ctx: RouteContext, processor: BaseProcessor): Promise<unknown>;
@@ -14,7 +14,7 @@ export class JsonValueProcessor implements IValueProcessor {
       return isObject(value) ? value as T : JSON.parse(value as string) as T;
     } catch (err) {
       // Error processing value, log error and return null
-      console.error('Value processing failed:', err);
+      console.error('value processing failed:', err);
       return null;
     }
   }

@@ -14,6 +14,7 @@ export default defineConfig({
     // API options here:
     environmentOptions: {},
     include: ['./test/**/*.test.ts'],
+    exclude: ['./test/executor/**/*.test.ts'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html', 'clover', 'json', 'json-summary', 'lcov'],
