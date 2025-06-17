@@ -7,17 +7,17 @@ import { MetaType } from './enum';
 import { RequestRewriteMeta } from './impl/RequestRewriteMeta';
 import { ResponseRewriteMeta } from './impl/ResponseRewriteMeta';
 
-export type MetaConstructor = new (options: {
+export type MetaConstructor<TContext extends RouteContext = RouteContext> = new (options: {
   type: string;
   logger: ILogger;
-  ctx: RouteContext;
+  ctx: TContext;
   data: any;
   processor: BaseProcessor;
-}) => BaseMeta;
+}) => BaseMeta<TContext>;
 
 // Meta 工厂类，负责注册和创建 Meta 实例
 export class MetaFactory {
-  private static readonly metaConstructors = new Map<string, MetaConstructor>();
+  private static readonly metaConstructors = new Map<string, MetaConstructor<any>>();
   private static initialized = false;
 
   // 确保工厂已初始化
@@ -35,8 +35,11 @@ export class MetaFactory {
     this.metaConstructors.set(MetaType.RESPONSE_REWRITE, ResponseRewriteMeta);
   }
 
-  // 注册 Meta 类
-  public static register(type: string, constructor: MetaConstructor): void {
+  // 注册 Meta 类 - 支持泛型 Context
+  public static register<TContext extends RouteContext = RouteContext>(
+    type: string,
+    constructor: MetaConstructor<TContext>,
+  ): void {
     this.ensureInitialized();
     if (this.metaConstructors.has(type)) {
       console.warn(`Meta type '${type}' is already registered. Overwriting existing registration.`);
@@ -45,18 +48,18 @@ export class MetaFactory {
     console.log(`Registered Meta class: ${constructor.name} for type '${type}'`);
   }
 
-  // 创建 Meta 实例
-  public static create(
+  // 创建 Meta 实例 - 支持泛型 Context
+  public static create<TContext extends RouteContext = RouteContext>(
     type: string,
     options: {
       logger: ILogger;
-      ctx: RouteContext;
+      ctx: TContext;
       data: any;
       processor: BaseProcessor;
     },
-  ): BaseMeta {
+  ): BaseMeta<TContext> {
     this.ensureInitialized();
-    const constructor = this.metaConstructors.get(type);
+    const constructor = this.metaConstructors.get(type) as MetaConstructor<TContext>;
     if (!constructor) {
       throw new Error(`Meta type '${type}' not found. Available types: ${Array.from(this.metaConstructors.keys()).join(', ')}`);
     }
@@ -80,7 +83,7 @@ export class MetaFactory {
   }
 
   // 获取所有注册的构造函数（保持向后兼容）
-  public static getMetaConstructors(): Map<string, MetaConstructor> {
+  public static getMetaConstructors(): Map<string, MetaConstructor<any>> {
     this.ensureInitialized();
     return new Map(this.metaConstructors);
   }

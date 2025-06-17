@@ -16,11 +16,11 @@ export interface ExecuteResult {
   result?: unknown;
 }
 
-// Executor 构造函数类型
-export type ExecutorConstructor = new (options: {
+// Executor 构造函数类型 - 支持泛型 Context
+export type ExecutorConstructor<TContext extends RouteContext = RouteContext> = new (options: {
   groupProcessor: GroupProcessor;
-  ctx: RouteContext;
-}) => BaseExecutor;
+  ctx: TContext;
+}) => BaseExecutor<TContext>;
 
 // 基础执行器类
 export abstract class BaseExecutor<T extends RouteContext = RouteContext> {

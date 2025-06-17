@@ -9,7 +9,7 @@ import { ResponseRewriteExecutor } from './impl/ResponseRewriteExecutor';
 
 // Executor 工厂类，负责注册和创建 Executor 实例
 export class ExecutorFactory {
-  private static readonly executorConstructors = new Map<string, ExecutorConstructor>();
+  private static readonly executorConstructors = new Map<string, ExecutorConstructor<any>>();
   private static initialized = false;
 
   // 确保工厂已初始化
@@ -27,8 +27,11 @@ export class ExecutorFactory {
     this.executorConstructors.set(MetaType.RESPONSE_REWRITE, ResponseRewriteExecutor);
   }
 
-  // 注册 Executor 类
-  public static register(type: string, constructor: ExecutorConstructor): void {
+  // 注册 Executor 类 - 支持泛型 Context
+  public static register<TContext extends RouteContext = RouteContext>(
+    type: string,
+    constructor: ExecutorConstructor<TContext>,
+  ): void {
     this.ensureInitialized();
     if (this.executorConstructors.has(type)) {
       console.warn(`Executor type '${type}' is already registered. Overwriting existing registration.`);
@@ -37,16 +40,16 @@ export class ExecutorFactory {
     console.log(`Registered Executor class: ${constructor.name} for type '${type}'`);
   }
 
-  // 创建 Executor 实例
-  public static create(
+  // 创建 Executor 实例 - 支持泛型 Context
+  public static create<TContext extends RouteContext = RouteContext>(
     type: string,
     options: {
       groupProcessor: GroupProcessor;
-      ctx: RouteContext;
+      ctx: TContext;
     },
-  ): BaseExecutor {
+  ): BaseExecutor<TContext> {
     this.ensureInitialized();
-    const constructor = this.executorConstructors.get(type);
+    const constructor = this.executorConstructors.get(type) as ExecutorConstructor<TContext>;
     if (!constructor) {
       throw new Error(`Executor type '${type}' not found. Available types: ${Array.from(this.executorConstructors.keys()).join(', ')}`);
     }

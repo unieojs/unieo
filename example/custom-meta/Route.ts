@@ -55,9 +55,8 @@ export class Route {
   }
 
   private registerMeta() {
-    MetaFactory.register('hostInfoRewrites', HostInfoRewriteMeta);
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-    ExecutorFactory.register('hostInfoRewrites', HostInfoRewriteExecutor as any);
+    MetaFactory.register<CustomContext>('hostInfoRewrites', HostInfoRewriteMeta);
+    ExecutorFactory.register<CustomContext>('hostInfoRewrites', HostInfoRewriteExecutor);
   }
 
   private registerProcessor() {
