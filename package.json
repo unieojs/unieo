@@ -1,7 +1,7 @@
 {
   "name": "@unieojs/unieo",
   "version": "0.1.0",
-  "description": "💪 A powerful router core for edge computing environments",
+  "description": "🐚 A schema-driven routing engine for edge computing environments.",
   "dependencies": {
     "cookie": "^0.5.0",
     "koa-compose": "^4.1.0",
@@ -12,7 +12,11 @@
     "semver": "^7.3.8"
   },
   "devDependencies": {
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "@eslint/js": "^9.27.0",
+    "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
     "@stylistic/eslint-plugin": "^4.4.0",
     "@types/cookie": "^0.6.0",
     "@types/koa-compose": "^3.2.8",
@@ -23,8 +27,10 @@
     "@typescript-eslint/eslint-plugin": "^8.33.0",
     "@typescript-eslint/parser": "^8.33.0",
     "@vitest/coverage-v8": "^3.0.4",
+    "conventional-changelog-conventionalcommits": "^9.0.0",
     "eslint": "^9.27.0",
     "miniflare": "^2.9.0",
+    "semantic-release": "^24.2.5",
     "sinon": "^14.0.1",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.33.0",
@@ -45,11 +51,12 @@
     "test": "vitest",
     "test-local": "vitest --run",
     "cov": "vitest run --coverage",
-    "ci": "npm run build && npm run type-check && npm run lint && npm run test"
+    "ci": "npm run build && npm run type-check && npm run lint && npm run test",
+    "semantic-release": "semantic-release"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/unieojs/Unieo"
+    "url": "https://github.com/unieojs/unieo"
   },
   "author": "Unieo Team",
   "license": "MIT",
