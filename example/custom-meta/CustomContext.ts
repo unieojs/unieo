@@ -1,5 +1,5 @@
-import { RouteContext, RouteContextRawData } from '../../../src';
-import { HostInfo } from './HostInfo';
+import { RouteContext } from '../../src';
+import type { HostInfo } from './HostInfo';
 
 export class CustomContext extends RouteContext {
   #hostInfo?: HostInfo;

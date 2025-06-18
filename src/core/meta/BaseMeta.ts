@@ -2,16 +2,16 @@ import type { ILogger } from '../../types';
 import type { RouteContext } from '../RouteContext';
 import type { BaseProcessor } from '../processor/BaseProcessor';
 
-export abstract class BaseMeta {
+export abstract class BaseMeta<TContext extends RouteContext = RouteContext> {
   protected readonly type: string;
   protected readonly logger: ILogger;
-  protected readonly ctx: RouteContext;
+  protected readonly ctx: TContext;
   protected readonly processor: BaseProcessor;
   protected readonly data: unknown;
 
   protected constructor(options: {
     type: string;
-    ctx: RouteContext;
+    ctx: TContext;
     logger: ILogger;
     processor: BaseProcessor;
     data: unknown;

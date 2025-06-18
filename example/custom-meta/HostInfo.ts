@@ -11,16 +11,16 @@ export class HostInfo {
     return this.#platform;
   }
 
+  set platform(value: string) {
+    this.#platform = value;
+  }
+
   get platformId(): string {
     return this.#platformId;
   }
 
   set platformId(value: string) {
     this.#platformId = value;
-  }
-
-  set platform(value: string) {
-    this.#platform = value;
   }
 
   public clone(): HostInfo {
