@@ -14,18 +14,19 @@ export interface RouteContextRawData {
   request: Request;
   helper: RouteHelper;
   event: FetchEvent;
+  performance?: ERPerformance;
   middlewares?: [string, MiddlewareGen][];
 }
 
 export class RouteContext {
   public logger: ILogger;
   public readonly middlewareManager: MiddlewareManager;
+  public readonly performance: ERPerformance;
   public readonly event: FetchEvent;
   public httpClient: HttpClient;
   readonly #errors: BaseError[];
   readonly #originRequest: Request;
   readonly #originRequestUrl: URL;
-  readonly #performance: ERPerformance;
   #request: Request;
   #response?: Response;
   #requestUrl: URL;
@@ -34,7 +35,7 @@ export class RouteContext {
 
   constructor(data: RouteContextRawData) {
     this.event = data.event;
-    this.#performance = new ERPerformance();
+    this.performance = data.performance ?? new ERPerformance();
     this.httpClient = data.helper.httpClient;
     this.logger = data.helper.logger;
     this.middlewareManager = new MiddlewareManager({
@@ -107,10 +108,6 @@ export class RouteContext {
 
   set requestInit(value: ERRequestInit) {
     this.#requestInit = value;
-  }
-
-  get performance() {
-    return this.#performance;
   }
 
   setRequest(request: Request) {

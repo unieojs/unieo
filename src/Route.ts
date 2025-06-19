@@ -1,5 +1,6 @@
 import type { GroupRawRoute } from './core';
 import { GroupProcessor, ProcessorFactory, RouteContext, SubProcessor } from './core';
+import { ERPerformance } from './core/ERPerformance';
 import type { ERFetchEvent, HttpClient, ILogger } from './types';
 import type { MiddlewareGen } from './middleware';
 import { GroupProcessorType, SubProcessorType } from './common/Enum';
@@ -9,6 +10,7 @@ interface RouteRawData {
   event: ERFetchEvent;
   logger?: ILogger;
   httpClient?: HttpClient;
+  performance?: ERPerformance;
   middlewares?: [string, MiddlewareGen][];
 }
 
@@ -20,6 +22,7 @@ export class Route {
     this.#ctx = new RouteContext({
       event: data.event,
       request: data.event.request,
+      performance: data.performance ?? new ERPerformance(),
       middlewares: data.middlewares,
       helper: {
         logger: data.logger ?? console,
