@@ -12,6 +12,7 @@ module.exports = {
     : undefined,
   repositoryUrl: 'https://github.com/unieojs/unieo',
   plugins: [
+    '@semantic-release/commit-analyzer',
     [
       '@semantic-release/release-notes-generator',
       {
@@ -34,6 +35,13 @@ module.exports = {
         writerOpts: {
           commitsSort: ['subject', 'scope']
         }
+      }
+    ],
+    '@semantic-release/npm',
+    [
+      "@semantic-release/github",
+      {
+        "assets": ["dist/**"]
       }
     ],
     [
