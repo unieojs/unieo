@@ -24,6 +24,11 @@ permissions:
   issues: write
   pull-requests: write
   id-token: write
+  actions: write
+  checks: write
+  deployments: write
+  pages: write
+  statuses: write
 
 jobs:
   release:
@@ -35,7 +40,7 @@ jobs:
         with:
           fetch-depth: 0
           ref: ${{ inputs.release_branch || 'main' }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.SEMANTIC_RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -64,7 +69,7 @@ jobs:
 
       - name: Release
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN || secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           # Set RC flag for main branch when create_rc is true
