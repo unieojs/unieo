@@ -10,6 +10,7 @@ module.exports = {
       ]
     // use default branches
     : undefined,
+  repositoryUrl: 'https://github.com/unieojs/unieo',
   plugins: [
     [
       '@semantic-release/release-notes-generator',
