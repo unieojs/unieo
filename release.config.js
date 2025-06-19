@@ -9,7 +9,7 @@ module.exports = {
         'beta',
       ]
     // use default branches
-    :[],
+    : undefined,
   repositoryUrl: 'https://github.com/unieojs/unieo',
   plugins: [
     [
