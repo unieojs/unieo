@@ -10,8 +10,8 @@ on:
         type: choice
         options:
           - main
-          - beta
           - alpha
+          - beta
           - next
       create_rc:
         description: 'Create release candidate (only for main branch)'
@@ -46,19 +46,11 @@ jobs:
       - name: Install dependencies
         run: npm i
 
-      - name: Run CI
-        run: npm run ci
-
       - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
         run: npm audit signatures
 
-      - name: Build
-        run: npm run build
-
-      - name: Run tests
-        run: npm run test
-
-
+      - name: Run CI
+        run: npm run ci
 
       - name: Set release branch
         id: branch
