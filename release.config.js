@@ -9,7 +9,7 @@ module.exports = {
         'beta',
       ]
     // use default branches
-    : undefined,
+    :[],
   plugins: [
     [
       '@semantic-release/release-notes-generator',
