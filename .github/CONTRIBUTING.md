@@ -337,6 +337,7 @@ This project uses automated semantic versioning and publishing via [semantic-rel
 
 **Automated Steps:**
 - Version calculation based on commit types
+- CHANGELOG.md generation
 - Git tag creation  
 - GitHub Release with release notes (📋 with emoji categories)
 - NPM package publishing
