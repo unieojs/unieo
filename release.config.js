@@ -2,12 +2,14 @@
  * @type {import('semantic-release').GlobalConfig}
  */
 module.exports = {
-  branches: [
-    // Dynamic main branch configuration based on environment variable
-    process.env.SEMANTIC_RELEASE_RC === 'true' 
-      ? { name: 'main', prerelease: 'rc' }
-      : 'main',
-  ],
+  branches: process.env.SEMANTIC_RELEASE_RC === 'true' 
+    ? [
+        { name: 'main', prerelease: 'rc' },
+        // must remain one branch to release while main branch is rc
+        'beta',
+      ]
+    // use default branches
+    : undefined,
   plugins: [
     [
       '@semantic-release/release-notes-generator',
