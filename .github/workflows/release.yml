@@ -1,0 +1,110 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_branch:
+        description: 'Branch to release from (defaults to main)'
+        required: false
+        default: 'main'
+        type: choice
+        options:
+          - main
+          - beta
+          - alpha
+          - next
+      create_rc:
+        description: 'Create release candidate (only for main branch)'
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+  id-token: write
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.release_branch || 'main' }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm i
+
+      - name: Run CI
+        run: npm run ci
+
+      - name: Verify the integrity of provenance attestations and registry signatures for installed dependencies
+        run: npm audit signatures
+
+      - name: Build
+        run: npm run build
+
+      - name: Run tests
+        run: npm run test
+
+
+
+      - name: Set release branch
+        id: branch
+        run: |
+          BRANCH="${{ inputs.release_branch }}"
+          if [[ -z "$BRANCH" ]]; then
+            BRANCH="main"
+          fi
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+          echo "Using release branch: $BRANCH"
+
+      - name: Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          # Set RC flag for main branch when create_rc is true
+          SEMANTIC_RELEASE_RC: ${{ inputs.create_rc == true && (inputs.release_branch == 'main' || inputs.release_branch == '') }}
+        run: |
+          RELEASE_BRANCH="${{ steps.branch.outputs.branch }}"
+          CREATE_RC="${{ inputs.create_rc }}"
+          
+          echo "Release branch: $RELEASE_BRANCH"
+          echo "Create release candidate: $CREATE_RC"
+          echo "SEMANTIC_RELEASE_RC: $SEMANTIC_RELEASE_RC"
+          
+          case "$RELEASE_BRANCH" in
+            "main")
+              if [[ "$CREATE_RC" == "true" ]]; then
+                echo "Creating release candidate on main branch"
+              else
+                echo "Creating stable release on main branch"
+              fi
+              ;;
+            "beta")
+              echo "Creating beta prerelease on beta branch"
+              ;;
+            "alpha")
+              echo "Creating alpha prerelease on alpha branch"
+              ;;
+            "next")
+              echo "Creating next prerelease on next branch"
+              ;;
+            *)
+              echo "Creating release on branch: $RELEASE_BRANCH"
+              ;;
+          esac
+          
+          npx semantic-release 

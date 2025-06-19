@@ -12,3 +12,6 @@ dist
 .tshy*
 .node
 package-lock.json
+
+# Semantic release generated files (will be generated automatically)
+# CHANGELOG.md
