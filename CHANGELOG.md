@@ -1,3 +1,9 @@
+## [1.0.0-rc.2](https://github.com/unieojs/unieo/compare/v1.0.0-rc.1...v1.0.0-rc.2) (2025-06-26)
+
+### 🐛 Bug Fixes
+
+* export ERPerformance ([#24](https://github.com/unieojs/unieo/issues/24)) ([3117a9a](https://github.com/unieojs/unieo/commit/3117a9a7a21c254a1b7e34a88bc46d2b97e672db))
+
 ## 1.0.0-rc.1 (2025-06-19)
 
 ### 🚀 Features
