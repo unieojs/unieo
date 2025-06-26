@@ -4,13 +4,15 @@
 module.exports = {
   branches: process.env.SEMANTIC_RELEASE_RC === 'true' 
     ? [
-        { name: 'main', prerelease: 'rc' },
+        { name: 'main', prerelease: 'rc', channel: 'rc' },
         // must remain one branch to release while main branch is rc
         'beta',
       ]
     // use default branches
     : undefined,
+  repositoryUrl: 'https://github.com/unieojs/unieo',
   plugins: [
+    '@semantic-release/commit-analyzer',
     [
       '@semantic-release/release-notes-generator',
       {
@@ -33,6 +35,13 @@ module.exports = {
         writerOpts: {
           commitsSort: ['subject', 'scope']
         }
+      }
+    ],
+    '@semantic-release/npm',
+    [
+      "@semantic-release/github",
+      {
+        "assets": ["dist/**"]
       }
     ],
     [
