@@ -4,7 +4,7 @@
 module.exports = {
   branches: process.env.SEMANTIC_RELEASE_RC === 'true' 
     ? [
-        { name: 'main', prerelease: 'rc' },
+        { name: 'main', prerelease: 'rc', channel: 'rc' },
         // must remain one branch to release while main branch is rc
         'beta',
       ]
