@@ -7,3 +7,4 @@ export * from './processor';
 export * from './executor';
 export * from './meta';
 export * from './RouteContext';
+export * from './ERPerformance';
