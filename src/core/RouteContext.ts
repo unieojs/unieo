@@ -10,7 +10,6 @@ import { ERPerformance } from './ERPerformance';
 import type { MiddlewareConfig, MiddlewareGen } from '../middleware/types';
 
 export interface RouteContextRawData {
-  mainContext?: boolean;
   request: Request;
   helper: RouteHelper;
   event: FetchEvent;
