@@ -2,6 +2,7 @@ import type { MiddlewareGen, BaseMiddlewareOption } from './types';
 import { checkRequestSameUrl } from '../util/Request';
 import { isAvailableResponse } from '../util/Response';
 import { genError, ErrorCode } from '../common/Error';
+import type { RouteContext } from '../core';
 
 interface DefaultFetchMiddlewareOption extends BaseMiddlewareOption {
   responseErrorFallback: boolean;
@@ -9,7 +10,7 @@ interface DefaultFetchMiddlewareOption extends BaseMiddlewareOption {
 }
 
 const DefaultFetch: MiddlewareGen<DefaultFetchMiddlewareOption> = opt => {
-  return async (ctx, next) => {
+  return async (ctx: RouteContext, next) => {
     await next();
     // 如果已经有 response，直接跳过
     let response = ctx.response;

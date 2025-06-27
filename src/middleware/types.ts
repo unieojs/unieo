@@ -14,5 +14,5 @@ export type MiddlewareConfig = [string, BaseMiddlewareOption];
 
 export type MiddlewareNext = () => Promise<void>;
 
-export type Middleware = (ctx: RouteContext, next: MiddlewareNext) => Promise<void>;
-export type MiddlewareGen<T extends BaseMiddlewareOption = BaseMiddlewareOption> = (opt: T) => Middleware;
+export type Middleware<T extends RouteContext = RouteContext> = (ctx: T, next: MiddlewareNext) => Promise<void>;
+export type MiddlewareGen<T extends BaseMiddlewareOption = BaseMiddlewareOption> = (opt: T) => Middleware<any>;

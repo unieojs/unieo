@@ -1,7 +1,7 @@
-import type { ExecuteResult, SubExecuteResult } from '../BaseExecutor';
+import type { SubExecuteResult } from '../BaseExecutor';
 import { BaseExecutor } from '../BaseExecutor';
 import { ErrorCode, genError } from '../../../common/Error';
-import type { SubProcessor, GroupProcessor } from '../../processor';
+import type { GroupProcessor, SubProcessor } from '../../processor';
 import { MetaType } from '../../meta/enum';
 import type { RouteContext } from '../../RouteContext';
 import type { ERRequestInit } from '../../../types';
@@ -63,7 +63,7 @@ export class RequestRewriteExecutor extends BaseExecutor {
     return result;
   }
 
-  public async execute(): Promise<ExecuteResult> {
+  public async execute() {
     const result = {
       success: true,
       break: false,

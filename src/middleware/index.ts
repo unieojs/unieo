@@ -122,4 +122,5 @@ export type {
   MiddlewareGen,
   MiddlewareNext,
   BaseMiddlewareOption,
+  RawMiddleware,
 } from './types';

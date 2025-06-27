@@ -9,11 +9,11 @@ export interface SubExecuteResult<T> {
   result?: T;
 }
 
-export interface ExecuteResult {
+export interface ExecuteResult<T = unknown> {
   success: boolean;
   break: boolean;
   breakGroup?: boolean;
-  result?: unknown;
+  result?: T;
 }
 
 // Executor 构造函数类型 - 支持泛型 Context
@@ -40,5 +40,5 @@ export abstract class BaseExecutor<T extends RouteContext = RouteContext> {
     this.type = options.type;
   }
 
-  abstract execute(): Promise<ExecuteResult>;
+  abstract execute<T = unknown>(): Promise<ExecuteResult<T>>;
 }
