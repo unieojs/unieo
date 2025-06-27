@@ -11,12 +11,14 @@ export interface RawMeta {
   [key: string]: unknown; // 直接对应 Route JSON 中的 meta 字段
 }
 
+export type RawArgs = Record<string, unknown>; // 直接对应 Route JSON 中的 args 字段
+
 export interface RawRoute {
   name: string;
   type: string;
   status?: RouteStatus; // Legacy
   meta: RawMeta; // 直接对应 Route JSON 中的 meta 字段
-  args: Record<string, unknown>;
+  args: RawArgs;
 }
 
 export interface RawProcessorData {
@@ -25,15 +27,18 @@ export interface RawProcessorData {
   ctx: RouteContext;
 }
 
-export abstract class BaseProcessor {
+export abstract class BaseProcessor<
+  M extends RawMeta = RawMeta,
+  T extends RawArgs = RawArgs,
+> {
   protected readonly name: string;
   protected readonly type: string;
   public readonly break: boolean;
   public readonly weakDep?: boolean;
   public readonly logger: ILogger;
   protected readonly ctx: RouteContext;
-  protected readonly rawMeta: Record<string, unknown>;
-  public args: Record<string, unknown>;
+  protected readonly rawMeta: M;
+  public args: T;
   protected readonly match?: Match;
 
   protected constructor(data: RawProcessorData) {
@@ -44,8 +49,8 @@ export abstract class BaseProcessor {
     this.weakDep = !!route.meta?.weakDep;
     this.logger = logger;
     this.ctx = ctx;
-    this.rawMeta = route.meta;
-    this.args = route.args;
+    this.rawMeta = route.meta as M;
+    this.args = route.args as T;
     if (route.meta?.match) {
       this.match = new Match(route.meta?.match, this);
     }
@@ -56,5 +61,9 @@ export abstract class BaseProcessor {
       return true;
     }
     return this.match.match(this.ctx, this.ctx.logger);
+  }
+
+  public getType(): string {
+    return this.type;
   }
 }

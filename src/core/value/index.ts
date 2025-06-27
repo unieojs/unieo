@@ -4,7 +4,9 @@ import type { ValueSourceType, ValueType } from '../../common/Enum';
 import type { RouteContext } from '../RouteContext';
 import type { ISourceProcessor } from './SourceProcessor';
 import type { IValueProcessor } from './ValueProcessor';
-import type { BaseProcessor } from '../processor/BaseProcessor';
+import type { BaseProcessor } from '../processor';
+
+export type { ISourceProcessor, IValueProcessor };
 
 export const sourceProcessorManager = new SourceProcessorManager();
 
@@ -16,15 +18,15 @@ export interface ValueRawData {
   valueType?: ValueType;
 }
 
-export interface IValue {
-  get(ctx: RouteContext): Promise<unknown>;
+export interface IValue<T = unknown> {
+  get(ctx: RouteContext): Promise<T>;
   toObject(): { source: unknown; sourceType: ValueSourceType };
   get source(): unknown;
   get sourceType(): ValueSourceType;
   get valueType(): ValueType | undefined;
 }
 
-export class Value implements IValue {
+export class Value<T = unknown> implements IValue<T> {
   readonly #source: unknown;
   readonly #sourceType: ValueSourceType;
   readonly #valueType?: ValueType;
@@ -53,9 +55,9 @@ export class Value implements IValue {
     return this.#valueType;
   }
 
-  async get(ctx: RouteContext): Promise<unknown> {
+  async get(ctx: RouteContext): Promise<T> {
     const value = this.#sourceProcessor ? await this.#sourceProcessor.getSource(this, ctx, this.#processor) : null;
-    return this.#valueProcessor?.getValue(value, ctx, this.#processor) ?? value;
+    return (this.#valueProcessor?.getValue(value, ctx, this.#processor) ?? value) as T;
   }
 
   toObject() {
