@@ -23,7 +23,7 @@ export class RouteExecutor {
 
     for (const groupProcessor of this.routeProcessor.groupProcessors) {
       const groupExecutor = ExecutorFactory.create(type, { ctx: this.ctx, groupProcessor });
-      const result = await groupExecutor.execute() as ExecuteResult<T>;
+      const result = await groupExecutor.execute<T>();
       if (result.break) {
         return result;
       }
