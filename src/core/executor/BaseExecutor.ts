@@ -40,5 +40,5 @@ export abstract class BaseExecutor<T extends RouteContext = RouteContext> {
     this.type = options.type;
   }
 
-  abstract execute(): Promise<any>;
+  abstract execute<T = unknown>(): Promise<ExecuteResult<T>>;
 }
