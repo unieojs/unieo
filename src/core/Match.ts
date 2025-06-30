@@ -1,4 +1,4 @@
-import { isArray, isNil, isString } from 'lodash';
+import { isArray, isNil, isObject, isString } from 'lodash';
 import { match } from 'path-to-regexp';
 import { MatchOperator, Operator, ValueType } from '../common/Enum';
 import { Value } from './value';
@@ -179,6 +179,12 @@ export class Match {
       }
       case Operator.NUMBER: {
         return !isNaN(origin as number);
+      }
+      case Operator.KEY_OF: {
+        if (!isObject(criteria) || !criteria || !isString(origin)) {
+          return false;
+        }
+        return Object.keys(criteria).includes(origin);
       }
       default:
         return false;

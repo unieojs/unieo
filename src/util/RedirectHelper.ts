@@ -24,7 +24,7 @@ export interface RedirectData {
   passQuery?: boolean;
 }
 
-export interface RedirectResult {
+export interface RedirectResult{
   href: string;
   status: number;
 }
@@ -65,7 +65,8 @@ export class RedirectHelper {
         return null;
       }
       // 透传参数
-      if (this.passQuery) {
+      // host 重定向直接做了 host 替换，不需要透传
+      if (this.passQuery && this.type !== RedirectType.HOST) {
         const opts = {
           isAlipaySchema: ALIPAY_SCHEMA_PROTOCOL.includes(this.originalDestinationProtocol),
         };
@@ -94,9 +95,20 @@ export class RedirectHelper {
         return this.getPathRedirectUrl(url);
       case RedirectType.PATH_REGEXP:
         return this.getPathRegexpRedirectUrl(url);
+      case RedirectType.PATH_PREFIX:
+        return this.getPathPrefixRedirectUrl(url);
+      case RedirectType.HOST:
+        return this.getHostRedirectUrl(url);
       default:
         return null;
     }
+  }
+
+  private getPathPrefixRedirectUrl(url: URL): string | null {
+    if (!url.pathname.startsWith(this.source)) {
+      return null;
+    }
+    return this.destination ?? null;
   }
 
   private getUrlRedirectUrl(url: URL): string | null {
@@ -170,5 +182,14 @@ export class RedirectHelper {
       return null;
     }
     return queryMatchResult.params;
+  }
+
+  private getHostRedirectUrl(url: URL): string | null {
+    if (this.source !== url.host || !this.destination || this.destination === url.host) {
+      return null;
+    }
+    const newUrl = new URL(url);
+    newUrl.host = this.destination;
+    return newUrl.href;
   }
 }

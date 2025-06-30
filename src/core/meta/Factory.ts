@@ -41,11 +41,7 @@ export class MetaFactory {
     constructor: MetaConstructor<TContext>,
   ): void {
     this.ensureInitialized();
-    if (this.metaConstructors.has(type)) {
-      console.warn(`Meta type '${type}' is already registered. Overwriting existing registration.`);
-    }
     this.metaConstructors.set(type, constructor);
-    console.log(`Registered Meta class: ${constructor.name} for type '${type}'`);
   }
 
   // 创建 Meta 实例 - 支持泛型 Context

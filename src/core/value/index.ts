@@ -6,7 +6,7 @@ import type { ISourceProcessor } from './SourceProcessor';
 import type { IValueProcessor } from './ValueProcessor';
 import type { BaseProcessor } from '../processor';
 
-export type { ISourceProcessor, IValueProcessor };
+export type { ISourceProcessor, IValueProcessor, ValueSourceType, ValueType };
 
 export const sourceProcessorManager = new SourceProcessorManager();
 
@@ -14,21 +14,21 @@ export const valueProcessorMap = new ValueProcessorManager();
 
 export interface ValueRawData {
   source: unknown;
-  sourceType: ValueSourceType;
+  sourceType: string;
   valueType?: ValueType;
 }
 
 export interface IValue<T = unknown> {
   get(ctx: RouteContext): Promise<T>;
-  toObject(): { source: unknown; sourceType: ValueSourceType };
+  toObject(): { source: unknown; sourceType: string };
   get source(): unknown;
-  get sourceType(): ValueSourceType;
+  get sourceType(): string;
   get valueType(): ValueType | undefined;
 }
 
 export class Value<T = unknown> implements IValue<T> {
   readonly #source: unknown;
-  readonly #sourceType: ValueSourceType;
+  readonly #sourceType: string;
   readonly #valueType?: ValueType;
   readonly #processor: BaseProcessor;
   readonly #sourceProcessor?: ISourceProcessor;
@@ -47,7 +47,7 @@ export class Value<T = unknown> implements IValue<T> {
     return this.#source;
   }
 
-  get sourceType(): ValueSourceType {
+  get sourceType(): string {
     return this.#sourceType;
   }
 

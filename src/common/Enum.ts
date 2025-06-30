@@ -119,6 +119,7 @@ export enum Operator {
   NOT_SUFFIX = 'not_suffix',
   NAN = 'nan',
   NUMBER = 'number',
+  KEY_OF = 'key_of',
 }
 
 export enum RequestRewriteType {
@@ -177,6 +178,8 @@ export enum RedirectType {
   URL = 'url',
   PATH = 'path',
   PATH_REGEXP = 'path_regexp',
+  PATH_PREFIX = 'path_prefix',
+  HOST = 'host',
 }
 
 /**

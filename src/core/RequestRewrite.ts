@@ -10,7 +10,7 @@ import type { BaseMiddlewareOption, MiddlewareConfig, RawMiddleware } from '../m
 import pMap from 'p-map';
 import type { RawMatch } from './Match';
 import { filterUndefined } from '../util/Array';
-import { appendHeader, getReqHeaderObj } from '../util/Header';
+import { appendHeader, getOriginalHeaderObj } from '../util/Header';
 import type { PathRegexpConfig } from '../util/PathRegexp';
 import type { BaseProcessor } from './processor';
 
@@ -73,7 +73,7 @@ export class RequestRewrite {
     return request;
   }
 
-  private rewriteUrl(_: RouteContext, request: Request, value: string | null): Request {
+  protected rewriteUrl(_: RouteContext, request: Request, value: string | null): Request {
     const url = new URL(request.url);
     switch (this.operation) {
       // url 只支持 SET
@@ -103,7 +103,7 @@ export class RequestRewrite {
     // url 一旦改变，需要重新创建 request，不再基于原始的 request
     return new Request(url.toString(), {
       method: request.method,
-      headers: getReqHeaderObj(request.headers),
+      headers: getOriginalHeaderObj(request.headers),
       redirect: request.redirect,
       body: request.body,
     });
