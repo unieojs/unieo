@@ -1,3 +1,9 @@
+## [1.0.0-rc.5](https://github.com/unieojs/unieo/compare/v1.0.0-rc.4...v1.0.0-rc.5) (2025-07-01)
+
+### 🐛 Bug Fixes
+
+* export util with exports ([#33](https://github.com/unieojs/unieo/issues/33)) ([ecb14c9](https://github.com/unieojs/unieo/commit/ecb14c97ef789fc00aedaf7f48e2825c81aac509))
+
 ## [1.0.0-rc.4](https://github.com/unieojs/unieo/compare/v1.0.0-rc.3...v1.0.0-rc.4) (2025-07-01)
 
 ### 🐛 Bug Fixes
