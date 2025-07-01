@@ -1,17 +1,17 @@
 import { isNil, isObject, isString } from 'lodash';
 import { RequestInitValueType, RequestRewriteType, RewriteOperation, UrlValueType } from '../common/Enum';
-import { Value } from './value';
-import { Match } from './Match';
-import { rewritePath, rewriteUrl } from '../util/PathRegexp';
 import type { ValueRawData } from './value';
+import { Value } from './value';
+import type { RawMatch } from './Match';
+import { Match } from './Match';
+import type { PathRegexpConfig } from '../util/PathRegexp';
+import { rewritePath, rewriteUrl } from '../util/PathRegexp';
 import type { RouteContext } from './RouteContext';
 import { appendSearchParams, isValidUrl } from '../util/Url';
 import type { BaseMiddlewareOption, MiddlewareConfig, RawMiddleware } from '../middleware/types';
 import pMap from 'p-map';
-import type { RawMatch } from './Match';
 import { filterUndefined } from '../util/Array';
-import { appendHeader, getOriginalHeaderObj } from '../util/Header';
-import type { PathRegexpConfig } from '../util/PathRegexp';
+import { appendHeader, getReqHeaderObj } from '../util/Header';
 import type { BaseProcessor } from './processor';
 
 export interface RawRequestRewrite {
@@ -103,7 +103,7 @@ export class RequestRewrite {
     // url 一旦改变，需要重新创建 request，不再基于原始的 request
     return new Request(url.toString(), {
       method: request.method,
-      headers: getOriginalHeaderObj(request.headers),
+      headers: getReqHeaderObj(request.headers),
       redirect: request.redirect,
       body: request.body,
     });
