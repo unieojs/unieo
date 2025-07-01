@@ -2,7 +2,7 @@ import type { SubExecuteResult } from '../BaseExecutor';
 import { BaseExecutor } from '../BaseExecutor';
 import { ErrorCode, genError } from '../../../common/Error';
 import type { GroupProcessor, SubProcessor } from '../../processor';
-import { MetaType } from '../../meta/enum';
+import { MetaType } from '../../meta';
 import type { RouteContext } from '../../RouteContext';
 
 export class RedirectExecutor extends BaseExecutor {

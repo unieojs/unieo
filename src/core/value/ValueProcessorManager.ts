@@ -24,7 +24,8 @@ export class ValueProcessorManager {
 
   register(valueType: ValueType, processor: IValueProcessor) {
     if (ValueProcessorManager.valueProcessorMap.has(valueType)) {
-      throw new Error(`ValueProcessorManager: valueType ${valueType} already exists`);
+      return;
+      // throw new Error(`ValueProcessorManager: valueType ${valueType} already exists`);
     }
     ValueProcessorManager.valueProcessorMap.set(valueType, processor);
   }

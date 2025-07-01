@@ -34,10 +34,10 @@ export class ExecutorFactory {
   ): void {
     this.ensureInitialized();
     if (this.executorConstructors.has(type)) {
-      console.warn(`Executor type '${type}' is already registered. Overwriting existing registration.`);
+      // console.warn(`Executor type '${type}' is already registered. Overwriting existing registration.`);
     }
     this.executorConstructors.set(type, constructor);
-    console.log(`Registered Executor class: ${constructor.name} for type '${type}'`);
+    // console.log(`Registered Executor class: ${constructor.name} for type '${type}'`);
   }
 
   // 创建 Executor 实例 - 支持泛型 Context

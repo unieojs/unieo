@@ -16,14 +16,14 @@ export class RouteExecutor {
     this.ctx = options.ctx;
   }
 
-  public async execute<T = unknown>(type: string): Promise<ExecuteResult<T> | undefined> {
+  public async execute(type: string): Promise<ExecuteResult | undefined> {
     if (!type) {
       throw genError(ErrorCode.SystemError, 'No meta type found in request headers');
     }
 
     for (const groupProcessor of this.routeProcessor.groupProcessors) {
       const groupExecutor = ExecutorFactory.create(type, { ctx: this.ctx, groupProcessor });
-      const result = await groupExecutor.execute<T>();
+      const result = await groupExecutor.execute();
       if (result.break) {
         return result;
       }

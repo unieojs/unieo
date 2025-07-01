@@ -32,7 +32,6 @@ export class MiddlewareManager {
       [ 'ErrorFallback', ErrorFallback as MiddlewareGen<BaseMiddlewareOption> ],
       ...(data.middlewares ?? []),
     ]);
-    // 添加默认中间件
   }
 
   get middlewares() {
@@ -65,6 +64,7 @@ export class MiddlewareManager {
     if (!this.#presetMiddlewares.has(name)) {
       throw genError(ErrorCode.RequestMiddlewareNotFoundError, {
         summary: name,
+        message: 'Middleware not found: ' + name,
       });
     }
     const existMiddlewareIndex = this.#middlewares.findIndex(item => item[0] === name);

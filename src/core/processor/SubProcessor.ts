@@ -31,11 +31,11 @@ export class SubProcessor extends BaseProcessor {
     // 使用 MetaFactory 创建 Meta 实例
     Object.keys(this.rawMeta).forEach(type => {
       if (!MetaFactory.isRegistered(type)) {
-        this.logger.warn(`Meta type ${type} is not registered in processor ${this.name}`);
+        // this.logger.warn(`Meta type ${type} is not registered in processor ${this.name}`);
         return;
       }
       if (this.metas.has(type)) {
-        this.logger.warn(`Meta type ${type} is already registered in processor ${this.name}`);
+        // this.logger.warn(`Meta type ${type} is already registered in processor ${this.name}`);
         return;
       }
 
@@ -60,7 +60,7 @@ export class SubProcessor extends BaseProcessor {
 
   public async process(type: string, data?: unknown) {
     if (!this.metas.has(type)) {
-      this.logger.warn(`Meta type ${type} not found in processor ${this.name}`);
+      // this.logger.warn(`Meta type ${type} not found in processor ${this.name}`);
       return;
     }
     const meta = this.metas.get(type)!;
@@ -69,7 +69,7 @@ export class SubProcessor extends BaseProcessor {
 
   public needProcess(type: string): boolean {
     if (!this.metas.has(type)) {
-      this.logger.warn(`Meta type ${type} not found in processor ${this.name}`);
+      // this.logger.warn(`Meta type ${type} not found in processor ${this.name}`);
       return false;
     }
     return this.metas.get(type)!.needProcess();

@@ -1,17 +1,17 @@
 import { isNil, isObject, isString } from 'lodash';
 import { RequestInitValueType, RequestRewriteType, RewriteOperation, UrlValueType } from '../common/Enum';
-import { Value } from './value';
-import { Match } from './Match';
-import { rewritePath, rewriteUrl } from '../util/PathRegexp';
 import type { ValueRawData } from './value';
+import { Value } from './value';
+import type { RawMatch } from './Match';
+import { Match } from './Match';
+import type { PathRegexpConfig } from '../util/PathRegexp';
+import { rewritePath, rewriteUrl } from '../util/PathRegexp';
 import type { RouteContext } from './RouteContext';
 import { appendSearchParams, isValidUrl } from '../util/Url';
 import type { BaseMiddlewareOption, MiddlewareConfig, RawMiddleware } from '../middleware/types';
 import pMap from 'p-map';
-import type { RawMatch } from './Match';
 import { filterUndefined } from '../util/Array';
 import { appendHeader, getReqHeaderObj } from '../util/Header';
-import type { PathRegexpConfig } from '../util/PathRegexp';
 import type { BaseProcessor } from './processor';
 
 export interface RawRequestRewrite {
@@ -73,7 +73,7 @@ export class RequestRewrite {
     return request;
   }
 
-  private rewriteUrl(_: RouteContext, request: Request, value: string | null): Request {
+  protected rewriteUrl(_: RouteContext, request: Request, value: string | null): Request {
     const url = new URL(request.url);
     switch (this.operation) {
       // url 只支持 SET
