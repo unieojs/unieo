@@ -1,33 +1,17 @@
 import { RouteExecutor } from './executor';
-import type { RouteContext } from './RouteContext';
-import { MetaType } from './meta/enum';
-import type { RouteProcessor } from './processor';
+import { MetaType } from './meta';
 
-export class CommonRouteExecutor {
-  protected routeExecutor: RouteExecutor;
-  protected readonly ctx: RouteContext;
-
-  constructor(options: {
-    processor: RouteProcessor;
-    ctx: RouteContext;
-  }) {
-    this.routeExecutor = new RouteExecutor({
-      routeProcessor: options.processor,
-      ctx: options.ctx,
-    });
-    this.ctx = options.ctx;
-  }
-
+export class CommonRouteExecutor extends RouteExecutor {
   public async redirect() {
-    await this.routeExecutor.execute(MetaType.REDIRECT);
+    await this.executeMeta(MetaType.REDIRECT);
   }
 
   public async requestRewrite() {
-    await this.routeExecutor.execute(MetaType.REQUEST_REWRITE);
+    await this.executeMeta(MetaType.REQUEST_REWRITE);
   }
 
   public async responseRewrite() {
-    await this.routeExecutor.execute(MetaType.RESPONSE_REWRITE);
+    await this.executeMeta(MetaType.RESPONSE_REWRITE);
   }
 
   public async request() {
