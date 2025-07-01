@@ -2,7 +2,7 @@ import { CommonRouteExecutor } from '../../src/core/CommonRouteExecutor';
 
 export class CustomRouteExecutor extends CommonRouteExecutor {
   public async rewriteHostInfo() {
-    await this.routeExecutor.execute('hostInfoRewrites');
+    await this.executeMeta('hostInfoRewrites');
   }
 
   public async execute() {

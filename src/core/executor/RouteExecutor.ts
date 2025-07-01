@@ -4,24 +4,24 @@ import { ErrorCode, genError } from '../../common/Error';
 import { ExecutorFactory } from './Factory';
 import type { ExecuteResult } from './BaseExecutor';
 
-export class RouteExecutor {
-  public readonly routeProcessor: RouteProcessor;
-  private readonly ctx: RouteContext;
+export abstract class RouteExecutor<T extends RouteContext = RouteContext> {
+  public readonly processor: RouteProcessor;
+  protected readonly ctx: T;
 
   constructor(options: {
-    routeProcessor: RouteProcessor;
-    ctx: RouteContext;
+    processor: RouteProcessor;
+    ctx: T;
   }) {
-    this.routeProcessor = options.routeProcessor;
+    this.processor = options.processor;
     this.ctx = options.ctx;
   }
 
-  public async execute(type: string): Promise<ExecuteResult | undefined> {
+  protected async executeMeta(type: string): Promise<ExecuteResult | undefined> {
     if (!type) {
       throw genError(ErrorCode.SystemError, 'No meta type found in request headers');
     }
 
-    for (const groupProcessor of this.routeProcessor.groupProcessors) {
+    for (const groupProcessor of this.processor.groupProcessors) {
       const groupExecutor = ExecutorFactory.create(type, { ctx: this.ctx, groupProcessor });
       const result = await groupExecutor.execute();
       if (result.break) {
@@ -29,4 +29,6 @@ export class RouteExecutor {
       }
     }
   }
+
+  abstract execute(): Promise<void>;
 }
