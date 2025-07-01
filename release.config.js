@@ -2,17 +2,29 @@
  * @type {import('semantic-release').GlobalConfig}
  */
 module.exports = {
-  branches: process.env.SEMANTIC_RELEASE_RC === 'true' 
+  branches: process.env.SEMANTIC_RELEASE_RC === 'true'
     ? [
-        { name: 'main', prerelease: 'rc', channel: 'rc' },
-        // must remain one branch to release while main branch is rc
-        'beta',
-      ]
+      { name: 'main', prerelease: 'rc', channel: 'rc' },
+      // must remain one branch to release while main branch is rc
+      'beta',
+    ]
     // use default branches
     : undefined,
   repositoryUrl: 'https://github.com/unieojs/unieo',
   plugins: [
-    '@semantic-release/commit-analyzer',
+    [
+      '@semantic-release/commit-analyzer',
+      {
+        preset: 'angular',
+        releaseRules: [
+          { type: 'docs', scope: 'README', release: 'patch' },
+          { type: 'refactor', scope: 'core-*', release: 'minor' },
+          { type: 'refactor', release: 'patch' },
+          { type: 'revert', release: 'patch' },
+          { scope: 'no-release', release: false },
+        ],
+      },
+    ],
     [
       '@semantic-release/release-notes-generator',
       {
@@ -29,28 +41,28 @@ module.exports = {
             { type: 'refactor', section: '♻️ Code Refactoring', hidden: false },
             { type: 'test', section: '✅ Tests', hidden: true },
             { type: 'build', section: '📦 Build System', hidden: true },
-            { type: 'ci', section: '🔄 Continuous Integration', hidden: true }
-          ]
+            { type: 'ci', section: '🔄 Continuous Integration', hidden: true },
+          ],
         },
         writerOpts: {
-          commitsSort: ['subject', 'scope']
-        }
-      }
+          commitsSort: ['subject', 'scope'],
+        },
+      },
     ],
     '@semantic-release/npm',
-    "@semantic-release/github",
+    '@semantic-release/github',
     [
       '@semantic-release/changelog',
       {
-        changelogFile: 'CHANGELOG.md'
-      }
+        changelogFile: 'CHANGELOG.md',
+      },
     ],
     [
       '@semantic-release/git',
       {
         assets: ['CHANGELOG.md', 'package.json'],
-        message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}'
-      }
-    ]
-  ]
+        message: 'chore(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}',
+      },
+    ],
+  ],
 }; 
