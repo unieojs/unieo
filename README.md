@@ -645,6 +645,7 @@ class CustomRoute extends Route {
 ```
 
 ## 🤝 Contributing
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/unieojs/unieo)
 
 We welcome contributions! 🎉 Please see our [Contributing Guide](.github/CONTRIBUTING.md) for details on how to get started.
 
