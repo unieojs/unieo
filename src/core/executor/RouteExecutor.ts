@@ -30,5 +30,5 @@ export abstract class RouteExecutor<T extends RouteContext = RouteContext> {
     }
   }
 
-  abstract execute(): Promise<void>;
+  abstract execute(): Promise<unknown>;
 }
