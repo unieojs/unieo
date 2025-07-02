@@ -1,3 +1,9 @@
+## [1.0.0-rc.6](https://github.com/unieojs/unieo/compare/v1.0.0-rc.5...v1.0.0-rc.6) (2025-07-02)
+
+### 🚀 Features
+
+* **core:** make RouteExecutor extendable ([#35](https://github.com/unieojs/unieo/issues/35)) ([fc1c872](https://github.com/unieojs/unieo/commit/fc1c87286ed3de4a3f3e8a5b4f1934bc5d275de1))
+
 ## [1.0.0-rc.5](https://github.com/unieojs/unieo/compare/v1.0.0-rc.4...v1.0.0-rc.5) (2025-07-01)
 
 ### 🐛 Bug Fixes
