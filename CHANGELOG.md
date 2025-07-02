@@ -1,3 +1,9 @@
+## [1.0.0-rc.7](https://github.com/unieojs/unieo/compare/v1.0.0-rc.6...v1.0.0-rc.7) (2025-07-02)
+
+### 🐛 Bug Fixes
+
+* abstract RouteExecutor.execute return unknown ([#36](https://github.com/unieojs/unieo/issues/36)) ([d0b6cb1](https://github.com/unieojs/unieo/commit/d0b6cb1da1b0277e741eefa85a88e223b47e5d66))
+
 ## [1.0.0-rc.6](https://github.com/unieojs/unieo/compare/v1.0.0-rc.5...v1.0.0-rc.6) (2025-07-02)
 
 ### 🚀 Features
