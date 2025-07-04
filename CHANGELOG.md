@@ -1,3 +1,9 @@
+## [1.0.0-rc.8](https://github.com/unieojs/unieo/compare/v1.0.0-rc.7...v1.0.0-rc.8) (2025-07-04)
+
+### ♻️ Code Refactoring
+
+* **type:** optimize types ([#38](https://github.com/unieojs/unieo/issues/38)) ([d202d13](https://github.com/unieojs/unieo/commit/d202d13f1bd4c778bebdb86919a7d61ddcbad359))
+
 ## [1.0.0-rc.7](https://github.com/unieojs/unieo/compare/v1.0.0-rc.6...v1.0.0-rc.7) (2025-07-02)
 
 ### 🐛 Bug Fixes
