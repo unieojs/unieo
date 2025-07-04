@@ -1,6 +1,5 @@
 import { RedirectType } from '../common/Enum';
 import {
-  ALIPAY_SCHEMA_PROTOCOL,
   appendSearchParams,
   getHost,
   getPath,
@@ -24,7 +23,7 @@ export interface RedirectData {
   passQuery?: boolean;
 }
 
-export interface RedirectResult{
+export interface RedirectResult {
   href: string;
   status: number;
 }
@@ -44,7 +43,7 @@ export class RedirectHelper {
     this.type = raw.type;
     this.passQuery = raw.passQuery !== false;
     this.destination = raw.destination;
-    if (this.destination && isValidUrl(this.destination)) {
+    if (this.destination && this.isValidUrl(this.destination)) {
       const protocol = getProtocol(this.destination);
       if (!HTTP_PROTOCOL.includes(protocol)) {
         this.originalDestinationProtocol = protocol;
@@ -67,10 +66,7 @@ export class RedirectHelper {
       // 透传参数
       // host 重定向直接做了 host 替换，不需要透传
       if (this.passQuery && this.type !== RedirectType.HOST) {
-        const opts = {
-          isAlipaySchema: ALIPAY_SCHEMA_PROTOCOL.includes(this.originalDestinationProtocol),
-        };
-        redirectUrl = appendSearchParams(redirectUrl, new URLSearchParams(url.search), opts);
+        redirectUrl = this.appendSearchParams(redirectUrl, new URLSearchParams(url.search));
       }
       // 替换 protocol
       if (this.originalDestinationProtocol) {
@@ -85,6 +81,14 @@ export class RedirectHelper {
       console.error('Redirect path matching failed:', err);
     }
     return null;
+  }
+
+  protected appendSearchParams(redirectUrl: string, searchParams: URLSearchParams): string {
+    return appendSearchParams(redirectUrl, searchParams);
+  }
+
+  protected isValidUrl(url: string): boolean {
+    return isValidUrl(url);
   }
 
   public getRedirectUrl(url: URL): string | null {
