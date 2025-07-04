@@ -4,38 +4,43 @@ import type { ValueRawData } from './value';
 import { Value } from './value';
 import type { RawMatch } from './Match';
 import { Match } from './Match';
-import type { PathRegexpConfig } from '../util/PathRegexp';
-import { rewritePath, rewriteUrl } from '../util/PathRegexp';
+import type { PathRegexpConfig } from '../util';
+import { rewritePath, rewriteUrl, appendSearchParams, isValidUrl } from '../util';
 import type { RouteContext } from './RouteContext';
-import { appendSearchParams, isValidUrl } from '../util/Url';
-import type { BaseMiddlewareOption, MiddlewareConfig, RawMiddleware } from '../middleware/types';
+import type { BaseMiddlewareOption, MiddlewareConfig, RawMiddleware } from '../middleware';
 import pMap from 'p-map';
 import { filterUndefined } from '../util/Array';
 import { appendHeader, getReqHeaderObj } from '../util/Header';
 import type { BaseProcessor } from './processor';
 
-export interface RawRequestRewrite {
+export interface RawRequestRewrite<
+  T extends string = RequestRewriteType,
+  O extends string = RewriteOperation,
+> {
   // 覆写类型
-  type: RequestRewriteType;
+  type: T;
   // 匹配字段
   field: string;
   // 覆写值
   value?: ValueRawData;
   // 操作
-  operation: RewriteOperation;
+  operation: O;
   // match 配置，做更精细的匹配
   match?: RawMatch;
 }
 
-export class RequestRewrite {
-  type: RequestRewriteType;
+export class RequestRewrite<
+  T extends string = RequestRewriteType,
+  O extends string = RewriteOperation,
+> {
+  type: T;
   field: string;
   value: Value | null;
-  operation: RewriteOperation;
+  operation: O;
   processor: BaseProcessor;
   match?: Match;
 
-  constructor(raw: RawRequestRewrite, processor: BaseProcessor) {
+  constructor(raw: RawRequestRewrite<T, O>, processor: BaseProcessor) {
     this.type = raw.type;
     this.field = raw.field;
     this.value = raw.value ? new Value(raw.value, processor) : null;

@@ -7,28 +7,34 @@ import type { RawMatch } from './Match';
 import { isNil } from 'lodash';
 import type { BaseProcessor } from './processor';
 
-export interface RawResponseRewrite {
+export interface RawResponseRewrite<
+  T extends string = ResponseRewriteType,
+  O extends string = ResponseRewriteOperation,
+> {
   // 覆写类型
-  type: ResponseRewriteType;
+  type: T;
   // 匹配字段
   field: string;
   // 覆写值
   value?: ValueRawData;
   // 操作
-  operation: ResponseRewriteOperation;
+  operation: O;
   // match 配置，做更精细的匹配
   match?: RawMatch;
 }
 
-export class ResponseRewrite {
-  type: ResponseRewriteType;
+export class ResponseRewrite<
+  T extends string = ResponseRewriteType,
+  O extends string = ResponseRewriteOperation,
+> {
+  type: T;
   field: string;
   value: Value | null;
-  operation: ResponseRewriteOperation;
+  operation: O;
   processor: BaseProcessor;
   match?: Match;
 
-  constructor(raw: RawResponseRewrite, processor: BaseProcessor) {
+  constructor(raw: RawResponseRewrite<T, O>, processor: BaseProcessor) {
     this.type = raw.type;
     this.field = raw.field;
     this.value = raw.value ? new Value(raw.value, processor) : null;

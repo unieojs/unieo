@@ -28,20 +28,12 @@ export enum MatchOperator {
 export enum ValueSourceType {
   // 字面值，value 为实际值
   LITERAL = 'literal',
-  // edge kv，value 为 namespace.key  KV = 'kv',
-  KV = 'kv',
-  // 内置脚本，value 为脚本名
-  SCRIPT = 'script',
-  // 边缘信息
-  EDGE_INFO = 'edge_info',
   // 请求头
   REQUEST_HEADER = 'request_header',
   // 响应头
   RESPONSE_HEADER = 'response_header',
   // 响应码
   RESPONSE_STATUS = 'response_status',
-  // 响应
-  RESPONSE_EXTENSION = 'response_extension',
   // cookie
   COOKIE = 'cookie',
   // url
@@ -56,42 +48,8 @@ export enum ValueSourceType {
   FETCH = 'fetch',
   // args
   ROUTE_ARGS = 'route_args',
-  // device
-  DEVICE = 'device',
-  // browser
-  BROWSER = 'browser',
-  // engine
-  ENGINE = 'engine',
-  // OS
-  OS = 'os',
-  // CPU
-  CPU = 'cpu',
-  // DID
-  DID = 'did',
-  // 支付宝
-  ALIPAY = 'alipay',
-  // 客户端 APP 信息
-  CLIENT_APP = 'clientApp',
-  // 网络信息
-  NETWORK = 'network',
-  // host
-  HOST_INFO = 'host_info',
-  // inOfficeNetwork
-  IN_OFFICE_NETWORK = 'in_office_network',
-  // render baseId (渲染基础ID)
-  RENDER_BASE_ID = 'render_base_id',
-  // user
-  USER = 'user',
-  // 不支持灰度的资源，如白名单，只取全量值
-  RESOURCE = 'resource',
-  // 支持灰度的资源
-  RESOURCE_WITH_GREY = 'resource_with_grey',
-  // 资源的 name 列表
-  RESOURCE_NAMES = 'resource_names',
   // 字符串模板
   STRING_TEMPLATE = 'string_template',
-  // locale
-  LOCALE = 'locale',
   // 嵌套 value
   VALUE_OBJECT = 'value_object',
 }
@@ -128,38 +86,22 @@ export enum RequestRewriteType {
   QUERY = 'query',
   REQUEST_INIT = 'request_init',
   MIDDLEWARE = 'middleware',
-  USER = 'user',
-  REVISION_RESOURCE = 'revision_resource',
 }
 
 export enum ResponseRewriteType {
   HEADER = 'header',
-  HTML_ELEMENT = 'html_element',
 }
 
 export enum ResponseRewriteOperation {
   SET = 'set',
   APPEND = 'append',
   DELETE = 'delete',
-  BEFORE = 'before',
-  AFTER = 'after',
-  PREPEND = 'prepend',
-  REPLACE = 'replace',
-  SET_INNER_CONTENT = 'setInnerContent',
-  REMOVE = 'remove',
-  REMOVE_AND_KEEP_CONTENT = 'removeAndKeepContent',
-  SET_ATTRIBUTE = 'setAttribute',
 }
 
 export enum RewriteOperation {
   SET = 'set',
   APPEND = 'append',
   DELETE = 'delete',
-}
-
-export enum GroupRouterOrder {
-  PARALLEL = 'parallel',
-  SEQUENCE = 'sequence',
 }
 
 export enum UrlValueType {

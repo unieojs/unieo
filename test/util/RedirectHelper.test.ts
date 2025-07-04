@@ -194,49 +194,6 @@ describe('test/util/RedirectHelper.test.ts', () => {
     assert.strictEqual(response!.href, 'https://www.exampleplus.com/?a=1&foo=xxhh');
   });
 
-  it('should redirect app schema work', () => {
-    const redirect = new RedirectHelper({
-      permanent: true,
-      source: '/',
-      destination: 'alipays://platformapi/startapp?appId=1234',
-      type: RedirectType.PATH,
-    });
-    const response = redirect.redirect(new URL('https://www.example.com'));
-    assert.strictEqual(response!.status, 301);
-    assert.strictEqual(response!.href, 'alipays://platformapi/startapp?appId=1234');
-  });
-
-  it('should redirect app schema with passQuery work', () => {
-    let redirect = new RedirectHelper({
-      permanent: true,
-      source: '/a/b/c',
-      destination: 'alipays://platformapi/startapp?appId=2021002171611721&page=pages%2Fproduct-detail%2Fproduct-detail',
-      type: RedirectType.PATH,
-      passQuery: true,
-    });
-    let response = redirect.redirect(new URL('https://www.example.com/a/b/c?foo=bar&bizId=1234'));
-    assert.strictEqual(response!.status, 301);
-    assert.strictEqual(
-      response!.href,
-      'alipays://platformapi/startapp?appId=2021002171611721&page=pages%2Fproduct-detail%2Fproduct-detail%3Ffoo%3Dbar%26bizId%3D1234',
-    );
-
-    redirect = new RedirectHelper({
-      permanent: true,
-      source: '/a/b/c',
-      destination:
-        'alipays://platformapi/startapp?appId=20000067&url=https%3A%2F%2Frender.example.com%2Fp%2Ff%2Ffd-jpxf357j%2Fpages%2Fhome%2Findex.html%3Fpriority%3DEXP_GOLD&startMultApp=YES',
-      type: RedirectType.PATH,
-      passQuery: true,
-    });
-    response = redirect.redirect(new URL('https://www.example.com/a/b/c?foo=bar&bizId=1234'));
-    assert.strictEqual(response!.status, 301);
-    assert.strictEqual(
-      response!.href,
-      'alipays://platformapi/startapp?appId=20000067&url=https%3A%2F%2Frender.example.com%2Fp%2Ff%2Ffd-jpxf357j%2Fpages%2Fhome%2Findex.html%3Fpriority%3DEXP_GOLD%26foo%3Dbar%26bizId%3D1234&startMultApp=YES',
-    );
-  });
-
   it('should work with path regexp redirect', function () {
     const assertRedirect = (rule: RedirectData, url: string, isRedirect: boolean, destination?: string) => {
       const redirect = new RedirectHelper(rule);

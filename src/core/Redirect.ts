@@ -2,7 +2,7 @@ import { Match } from './Match';
 import { RedirectHelper } from '../util/RedirectHelper';
 import type { RouteContext } from './RouteContext';
 import type { RawMatch } from './Match';
-import type { RedirectData } from '../util/RedirectHelper';
+import type { RedirectData } from '../util';
 import type { BaseProcessor } from './processor';
 
 export interface RawRedirect extends RedirectData {
@@ -10,15 +10,20 @@ export interface RawRedirect extends RedirectData {
   match?: RawMatch;
 }
 
-export class Redirect {
+export class Redirect<T extends RedirectHelper = RedirectHelper> {
   processor: BaseProcessor;
   match?: Match;
-  redirectHelper: RedirectHelper;
+  redirectHelper: T;
 
   constructor(raw: RawRedirect, processor: BaseProcessor) {
-    this.redirectHelper = new RedirectHelper(raw);
+    const RedirectHelperConstructor = this.getRedirectHelperConstructor();
+    this.redirectHelper = new RedirectHelperConstructor(raw) as T;
     this.processor = processor;
     this.match = raw.match ? new Match(raw.match, this.processor) : undefined;
+  }
+
+  protected getRedirectHelperConstructor(): typeof RedirectHelper {
+    return RedirectHelper;
   }
 
   async redirect(ctx: RouteContext): Promise<Response | null> {

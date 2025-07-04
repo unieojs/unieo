@@ -837,13 +837,9 @@ describe('test/core/Match.test.ts', () => {
     assert.ok(res);
   });
 
-  describe('should alipay version comparison work well', () => {
-    const uaVersion = '10.5.86.000001';
+  describe('should app version comparison work well', () => {
     const ctx = TestUtil.mockRouteContext({
       url: 'https://render.example.com/p/yuyan/1801234/index.xml?a=1',
-      headers: {
-        'user-agent': `Mozilla/5.0 (iPhone; CPU iPhone OS 16_7 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/20H19 ChannelId(0) Ariver/1.1.0 AliApp(AP/10.5.86.000001) Nebula AlipayDefined(nt:WIFI) AlipayClient/${uaVersion} Language/zh-Hans ProductType/dev NebulaX/1.0.0 DTN/2.0`,
-      },
     });
 
     it('should gt work well', async () => {
