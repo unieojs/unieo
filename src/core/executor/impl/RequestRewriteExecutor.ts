@@ -2,10 +2,10 @@ import type { SubExecuteResult } from '../BaseExecutor';
 import { BaseExecutor } from '../BaseExecutor';
 import { ErrorCode, genError } from '../../../common/Error';
 import type { GroupProcessor, SubProcessor } from '../../processor';
-import { MetaType } from '../../meta/enum';
+import { MetaType } from '../../meta';
 import type { RouteContext } from '../../RouteContext';
 import type { ERRequestInit } from '../../../types';
-import type { MiddlewareConfig } from '../../../middleware/types';
+import type { MiddlewareConfig } from '../../../middleware';
 
 interface RequestInfo {
   requestInit: ERRequestInit;
@@ -13,7 +13,7 @@ interface RequestInfo {
 }
 
 export class RequestRewriteExecutor extends BaseExecutor {
-  protected _stashRequestInfo?: RequestInfo;
+  #stashRequestInfo?: RequestInfo;
 
   constructor(options: {
     groupProcessor: GroupProcessor;
@@ -101,16 +101,16 @@ export class RequestRewriteExecutor extends BaseExecutor {
 
   private stashRequestInfo() {
     // requestInit 目前是 key-value 形式，简单的 clone 即可
-    this._stashRequestInfo = {
+    this.#stashRequestInfo = {
       requestInit: { ...this.ctx.requestInit },
       middlewares: [ ...this.ctx.middlewares ],
     };
   }
 
   private restoreRequestInfo() {
-    if (this._stashRequestInfo) {
-      this.ctx.requestInit = this._stashRequestInfo.requestInit;
-      this.ctx.setMiddlewares(this._stashRequestInfo.middlewares);
+    if (this.#stashRequestInfo) {
+      this.ctx.requestInit = this.#stashRequestInfo.requestInit;
+      this.ctx.setMiddlewares(this.#stashRequestInfo.middlewares);
     }
   }
 }

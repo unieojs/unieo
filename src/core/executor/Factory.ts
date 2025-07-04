@@ -3,7 +3,7 @@ import type { GroupProcessor } from '../processor';
 import type { BaseExecutor } from './BaseExecutor';
 import { type ExecutorConstructor } from './BaseExecutor';
 import { RedirectExecutor } from './impl/RedirectExecutor';
-import { MetaType } from '../meta/enum';
+import { MetaType } from '../meta';
 import { RequestRewriteExecutor } from './impl/RequestRewriteExecutor';
 import { ResponseRewriteExecutor } from './impl/ResponseRewriteExecutor';
 
@@ -33,11 +33,7 @@ export class ExecutorFactory {
     constructor: ExecutorConstructor<TContext>,
   ): void {
     this.ensureInitialized();
-    if (this.executorConstructors.has(type)) {
-      // console.warn(`Executor type '${type}' is already registered. Overwriting existing registration.`);
-    }
     this.executorConstructors.set(type, constructor);
-    // console.log(`Registered Executor class: ${constructor.name} for type '${type}'`);
   }
 
   // 创建 Executor 实例 - 支持泛型 Context
@@ -55,17 +51,5 @@ export class ExecutorFactory {
     }
 
     return new constructor(options);
-  }
-
-  // 获取所有注册的 Executor 类型
-  public static getRegisteredTypes(): string[] {
-    this.ensureInitialized();
-    return Array.from(this.executorConstructors.keys());
-  }
-
-  // 检查是否已注册某个类型
-  public static isRegistered(type: string): boolean {
-    this.ensureInitialized();
-    return this.executorConstructors.has(type);
   }
 }

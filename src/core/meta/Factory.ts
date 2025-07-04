@@ -66,21 +66,9 @@ export class MetaFactory {
     });
   }
 
-  // 获取所有注册的 Meta 类型
-  public static getRegisteredTypes(): string[] {
-    this.ensureInitialized();
-    return Array.from(this.metaConstructors.keys());
-  }
-
   // 检查是否已注册某个类型
   public static isRegistered(type: string): boolean {
     this.ensureInitialized();
     return this.metaConstructors.has(type);
-  }
-
-  // 获取所有注册的构造函数（保持向后兼容）
-  public static getMetaConstructors(): Map<string, MetaConstructor<any>> {
-    this.ensureInitialized();
-    return new Map(this.metaConstructors);
   }
 }
