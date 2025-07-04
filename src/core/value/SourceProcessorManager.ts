@@ -36,7 +36,6 @@ export class SourceProcessorManager {
   register(sourceType: string, processor: ISourceProcessor) {
     if (SourceProcessorManager.sourceProcessorMap.has(sourceType)) {
       return;
-      // throw new Error(`Source processor ${sourceType} already exists`);
     }
     SourceProcessorManager.sourceProcessorMap.set(sourceType, processor);
   }
