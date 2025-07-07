@@ -44,7 +44,7 @@ Unieo separates routing logic from application code through declarative configur
   meta: {
     match: {
       list: [{
-        origin: { source: 'country', sourceType: 'edge_info' },
+        origin: { source: 'cf-ipcountry', sourceType: 'request_header' },
         criteria: { source: 'CN', sourceType: 'literal' },
         operator: 'equal'
       }]
@@ -136,6 +136,9 @@ addEventListener('fetch', (event: FetchEvent) => {
 ```
 
 ## 🎨 Real-World Examples
+
+> [!NOTE]
+> **Event Type Notice**: While the examples use `FetchEvent` for compatibility, Unieo internally expects `ERFetchEvent` which extends `FetchEvent` with additional edge computing context. In practice, you can use standard `FetchEvent` and it will work correctly. The `ERInfo` interface provides edge computing specific information and will be populated by your edge runtime environment.
 
 ### 🌐 API Gateway
 
@@ -282,8 +285,11 @@ const abTestingRoutes = [
 
 Route requests based on device characteristics for optimal user experience:
 
-- **Match logic**: Uses `sourceType: 'device'` with `source: 'type'` to detect device type, matches when equal to `mobile`
+- **Match logic**: Uses `sourceType: 'request_header'` with `source: 'user-agent'` to detect device type through User-Agent header analysis
 - **Request rewrite**: Adds `x-mobile-optimized: true` header for mobile-specific processing
+
+> [!TIP]
+> **Device Detection**: This example demonstrates User-Agent based device detection using regex patterns. For more sophisticated device detection, consider integrating specialized device detection libraries in your custom middleware.
 
 ```typescript
 const deviceRoutes = [
@@ -300,9 +306,9 @@ const deviceRoutes = [
           match: {
             list: [
               {
-                origin: { source: 'type', sourceType: 'device' },
-                criteria: { source: 'mobile', sourceType: 'literal' },
-                operator: 'equal'
+                origin: { source: 'user-agent', sourceType: 'request_header' },
+                criteria: { source: 'Mobile|Android|iPhone', sourceType: 'literal' },
+                operator: 'regexp'
               }
             ]
           },
@@ -325,8 +331,11 @@ const deviceRoutes = [
 
 Serve localized content based on user location:
 
-- **Match logic**: Uses `sourceType: 'edge_info'` with `source: 'country'` to get user's country, checks if it's `in` the EU region
+- **Match logic**: Uses `sourceType: 'request_header'` with `source: 'cf-ipcountry'` to get user's country from Cloudflare's geolocation header
 - **Response rewrite**: Sets `x-privacy-policy: gdpr-compliant` header for EU users
+
+> [!TIP]
+> **Geolocation Headers**: This example uses Cloudflare's `cf-ipcountry` header. Different edge platforms provide different geolocation headers (e.g., Vercel uses `x-vercel-ip-country`, AWS CloudFront uses `cloudfront-viewer-country`). Adapt the header name based on your edge platform.
 
 ```typescript
 const geoRoutes = [
@@ -342,11 +351,11 @@ const geoRoutes = [
         meta: {
           match: {
             list: [
-              {
-                origin: { source: 'country', sourceType: 'edge_info' },
-                criteria: { source: 'EU', sourceType: 'literal' },
-                operator: 'in'
-              }
+                              {
+                  origin: { source: 'cf-ipcountry', sourceType: 'request_header' },
+                  criteria: { source: '^(FR|DE|IT|ES|NL|BE|AT|PT|IE|LU|FI|SE|DK|EE|LV|LT|PL|CZ|SK|HU|SI|HR|BG|RO|MT|CY)$', sourceType: 'literal' },
+                  operator: 'regexp'
+                }
             ]
           },
           responseRewrites: [
@@ -541,8 +550,8 @@ const complexRoutes = [
                 operator: 'regexp'
               },
               {
-                // Match specific time range
-                origin: { source: 'hour', sourceType: 'edge_info' },
+                // Match specific time range (using custom header or request processing)
+                origin: { source: 'x-current-hour', sourceType: 'request_header' },
                 criteria: { source: '9', sourceType: 'literal' },
                 operator: 'gte'
               },
