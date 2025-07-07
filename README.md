@@ -137,7 +137,6 @@ addEventListener('fetch', (event: FetchEvent) => {
 
 ## 🎨 Real-World Examples
 
-> [!NOTE]
 
 ### 🌐 API Gateway
 
