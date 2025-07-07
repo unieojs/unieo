@@ -44,7 +44,7 @@ Unieo separates routing logic from application code through declarative configur
   meta: {
     match: {
       list: [{
-        origin: { source: 'country', sourceType: 'edge_info' },
+        origin: { source: 'cf-ipcountry', sourceType: 'request_header' },
         criteria: { source: 'CN', sourceType: 'literal' },
         operator: 'equal'
       }]
@@ -136,6 +136,7 @@ addEventListener('fetch', (event: FetchEvent) => {
 ```
 
 ## 🎨 Real-World Examples
+
 
 ### 🌐 API Gateway
 
@@ -282,8 +283,11 @@ const abTestingRoutes = [
 
 Route requests based on device characteristics for optimal user experience:
 
-- **Match logic**: Uses `sourceType: 'device'` with `source: 'type'` to detect device type, matches when equal to `mobile`
+- **Match logic**: Uses `sourceType: 'request_header'` with `source: 'user-agent'` to detect device type through User-Agent header analysis
 - **Request rewrite**: Adds `x-mobile-optimized: true` header for mobile-specific processing
+
+> [!TIP]
+> **Device Detection**: This example demonstrates User-Agent based device detection using regex patterns. For more sophisticated device detection, consider integrating specialized device detection libraries in your custom middleware.
 
 ```typescript
 const deviceRoutes = [
@@ -300,9 +304,9 @@ const deviceRoutes = [
           match: {
             list: [
               {
-                origin: { source: 'type', sourceType: 'device' },
-                criteria: { source: 'mobile', sourceType: 'literal' },
-                operator: 'equal'
+                origin: { source: 'user-agent', sourceType: 'request_header' },
+                criteria: { source: 'Mobile|Android|iPhone', sourceType: 'literal' },
+                operator: 'regexp'
               }
             ]
           },
@@ -325,8 +329,9 @@ const deviceRoutes = [
 
 Serve localized content based on user location:
 
-- **Match logic**: Uses `sourceType: 'edge_info'` with `source: 'country'` to get user's country, checks if it's `in` the EU region
+- **Match logic**: Uses `sourceType: 'request_header'` with `source: 'cf-ipcountry'` to get user's country from Cloudflare's geolocation header
 - **Response rewrite**: Sets `x-privacy-policy: gdpr-compliant` header for EU users
+
 
 ```typescript
 const geoRoutes = [
@@ -342,11 +347,11 @@ const geoRoutes = [
         meta: {
           match: {
             list: [
-              {
-                origin: { source: 'country', sourceType: 'edge_info' },
-                criteria: { source: 'EU', sourceType: 'literal' },
-                operator: 'in'
-              }
+                              {
+                  origin: { source: 'cf-ipcountry', sourceType: 'request_header' },
+                  criteria: { source: '^(FR|DE|IT|ES|NL|BE|AT|PT|IE|LU|FI|SE|DK|EE|LV|LT|PL|CZ|SK|HU|SI|HR|BG|RO|MT|CY)$', sourceType: 'literal' },
+                  operator: 'regexp'
+                }
             ]
           },
           responseRewrites: [
@@ -518,7 +523,7 @@ const routesWithMiddleware = [
 
 ### 🧠 Complex Matching Logic
 
-Create sophisticated matching conditions:
+Unieo's Match system supports sophisticated conditional logic through its Value system:
 
 ```typescript
 const complexRoutes = [
@@ -535,32 +540,63 @@ const complexRoutes = [
           match: {
             list: [
               {
-                // Match specific user agent
+                // Match specific user agent using regex
                 origin: { source: 'user-agent', sourceType: 'request_header' },
                 criteria: { source: 'bot|crawler', sourceType: 'literal' },
                 operator: 'regexp'
               },
               {
-                // Match specific time range
-                origin: { source: 'hour', sourceType: 'edge_info' },
+                // Match time range (requires middleware to set header)
+                origin: { source: 'x-current-hour', sourceType: 'request_header' },
                 criteria: { source: '9', sourceType: 'literal' },
                 operator: 'gte'
               },
               {
-                // Match specific path
+                // Match API paths using prefix matching
                 origin: { source: 'path', sourceType: 'url' },
                 criteria: { source: '/api/', sourceType: 'literal' },
                 operator: 'prefix'
+              },
+              {
+                // Advanced: Nested value processing
+                origin: {
+                  source: {
+                    userType: { source: 'x-user-type', sourceType: 'request_header' },
+                    region: { source: 'cf-ipcountry', sourceType: 'request_header' }
+                  },
+                  sourceType: 'value_object'
+                },
+                criteria: {
+                  source: { userType: 'premium', region: 'US' },
+                  sourceType: 'literal'
+                },
+                operator: 'equal'
               }
             ],
             operator: 'and' // All conditions must match
-          }
+          },
+          // Apply custom processing when matched
+          requestRewrites: [
+            {
+              type: 'header',
+              field: 'x-route-matched',
+              value: { source: 'complex-route', sourceType: 'literal' },
+              operation: 'set'
+            }
+          ]
         }
       }
     ]
   }
 ];
 ```
+
+#### 🎯 Match System Features
+
+- **Nested Logic**: Support for complex AND/OR operations
+- **Value Integration**: Dynamic value extraction and comparison
+- **Operator Variety**: Equal, regex, prefix, range, and custom operators
+- **Type Coercion**: Automatic type conversion for comparisons
 
 ## 📖 Route Configuration Reference
 
@@ -591,58 +627,246 @@ interface SubRouteConfig {
     redirects?: RedirectConfig[];     // Redirect rules
     requestRewrites?: RequestRewriteConfig[];   // Request modifications
     responseRewrites?: ResponseRewriteConfig[]; // Response modifications
+    [key: string]: unknown;      // Custom meta types via MetaFactory
   };
   args?: Record<string, unknown>; // Processor arguments
 }
 ```
 
+### 📋 Meta Layer Architecture
+
+The Meta layer is the heart of Unieo's processing system, utilizing the Factory pattern for dynamic behavior:
+
+#### 🏭 MetaFactory System
+
+```typescript
+// Meta types are registered with MetaFactory
+enum MetaType {
+  REDIRECT = 'redirects',
+  REQUEST_REWRITE = 'requestRewrites', 
+  RESPONSE_REWRITE = 'responseRewrites'
+}
+
+// Each meta type has corresponding data structure
+interface SubRouteMetaTypes {
+  redirects?: RawRedirect[];           // Handled by RedirectMeta
+  requestRewrites?: RawRequestRewrite[]; // Handled by RequestRewriteMeta
+  responseRewrites?: RawResponseRewrite[]; // Handled by ResponseRewriteMeta
+}
+```
+
+#### 🔄 Meta Processing Flow
+
+1. **Configuration Parsing**: SubProcessor reads meta configuration
+2. **Factory Creation**: MetaFactory creates appropriate Meta instances based on type
+3. **Processing**: Each Meta instance handles its specific logic (redirects, rewrites, etc.)
+4. **Execution**: Executors coordinate Meta processing through the pipeline
+
+#### 🎯 Built-in Meta Types
+
+- **RedirectMeta**: Handles URL redirections with pattern matching
+- **RequestRewriteMeta**: Modifies incoming requests (headers, URL, middleware)
+- **ResponseRewriteMeta**: Transforms outgoing responses (headers, content)
+
+#### 💎 Value System Integration
+
+Meta processing leverages Unieo's powerful Value system for dynamic data extraction and transformation:
+
+```typescript
+// Value configuration structure
+interface ValueRawData {
+  source: unknown;           // The data source (header name, URL part, etc.)
+  sourceType: string;        // How to extract the data
+  valueType?: ValueType;     // How to process the extracted data
+}
+
+// Available source types
+enum ValueSourceType {
+  LITERAL = 'literal',                    // Static value
+  REQUEST_HEADER = 'request_header',      // HTTP request header
+  RESPONSE_HEADER = 'response_header',    // HTTP response header  
+  URL = 'url',                           // URL components (path, host, etc.)
+  COOKIE = 'cookie',                     // Cookie values
+  QUERY = 'query',                       // Query parameters
+  FETCH = 'fetch',                       // External API call
+  STRING_TEMPLATE = 'string_template',   // Template with variable substitution
+  VALUE_OBJECT = 'value_object'          // Nested value processing
+}
+
+// Example: Dynamic header based on user location
+const dynamicRewrite = {
+  type: 'header',
+  field: 'x-user-region',
+  value: {
+    source: 'cf-ipcountry',              // Extract from Cloudflare header
+    sourceType: 'request_header',        // Source is a request header
+    valueType: 'string'                  // Process as string
+  },
+  operation: 'set'
+};
+```
+
+#### 🧩 Custom Meta Extension
+
+The Meta system supports custom extensions:
+
+```typescript
+// Define custom meta data structure
+interface CustomValidationMeta {
+  rules: ValidationRule[];
+  onFailure: 'block' | 'warn' | 'log';
+  customHeaders?: Record<string, string>;
+}
+
+// Register custom meta type
+MetaFactory.register('validation', CustomValidationMeta);
+
+// Use in route configuration  
+const routeWithCustomMeta = {
+  meta: {
+    validation: [
+      {
+        rules: [{ field: 'authorization', required: true }],
+        onFailure: 'block',
+        customHeaders: { 'x-validation-error': 'missing-auth' }
+      }
+    ]
+  }
+};
+```
+
+## 🏗️ System Architecture
+
+Unieo adopts a sophisticated multi-layered architecture designed for maximum flexibility and extensibility. The system is built around several key concepts:
+
+### 🎯 Core Concepts
+
+- **Meta-Driven Configuration**: Route behavior is defined by Meta configurations rather than hard-coded logic
+- **Factory Pattern**: Dynamic creation and registration of components (Processors, Executors, Meta types)
+- **Value System**: Unified data extraction and transformation across all components
+- **Middleware Integration**: Comprehensive middleware system for request/response processing
+
+### 🔄 Execution Flow
+
+Unieo processes routes through a well-defined pipeline:
+
+1. **Route Initialization**: Creates RouteContext and ProcessorFactory
+2. **Configuration Processing**: Parses route configuration and creates appropriate processors
+3. **Meta Processing**: Dynamically creates Meta instances based on configuration
+4. **Execution Pipeline**: Coordinates redirects → request rewrites → middleware → response rewrites
+5. **Response Delivery**: Returns the final processed response
+
+
+
 ## 🧩 Extending Unieo
 
-**Note: The extension system is currently under development. 🚧 The following represents the planned architecture.**
+Unieo supports extensibility through custom middleware and value processors:
 
-### 🔧 Custom Processors
+### 🔗 Custom Middleware
 
-```typescript
-// Custom Group Processor (planned)
-class CustomGroupProcessor extends BaseGroupProcessor {
-  static processorType = 'CUSTOM_GROUP_PROCESSOR';
-  
-  async checkMatch(): Promise<boolean> {
-    // Custom matching logic
-    return true;
-  }
-}
-
-// Custom Sub Processor (planned)
-class CustomSubProcessor extends BaseSubProcessor {
-  static processorType = 'CUSTOM_SUB_PROCESSOR';
-  
-  async beforeRequest(): Promise<void> {
-    // Custom request processing
-  }
-  
-  async beforeResponse(): Promise<void> {
-    // Custom response processing
-  }
-}
-```
-
-### 🏗️ Custom Route Class
+The most common way to extend Unieo is through custom middleware:
 
 ```typescript
-// Extended Route class (planned)
-class CustomRoute extends Route {
-  constructor(data: RouteRawData) {
-    super(data);
-    // Register custom processors
-    this.registerCustomProcessors();
+import type { MiddlewareGen, BaseMiddlewareOption, RouteContext, MiddlewareNext } from 'unieo';
+
+// Define middleware options
+interface AuthMiddlewareOption extends BaseMiddlewareOption {
+  secret: string;
+  headerName?: string;
+}
+
+// Create middleware
+const AuthMiddleware: MiddlewareGen<AuthMiddlewareOption> = (opt) => {
+  return async (ctx: RouteContext, next: MiddlewareNext) => {
+    const { secret, headerName = 'authorization' } = opt;
+    const authHeader = ctx.request.headers.get(headerName);
+    
+    if (!authHeader || !authHeader.includes(secret)) {
+      ctx.setResponse(new Response('Unauthorized', { status: 401 }));
+      return;
+    }
+    
+    await next();
+  };
+};
+
+// Register and use
+const route = new Route({
+  event,
+  middlewares: [['Auth', AuthMiddleware]]
+});
+```
+
+### 💎 Custom Value Processors
+
+Extend the Value system for custom data sources:
+
+```typescript
+import { SourceProcessorManager } from 'unieo';
+
+class DatabaseSourceProcessor implements ISourceProcessor {
+  async getSource({ source }: IValue, ctx: RouteContext): Promise<unknown> {
+    // Custom database lookup
+    const query = source as string;
+    return await this.queryDatabase(query);
   }
   
-  private registerCustomProcessors() {
-    // Registration logic (under development)
+  private async queryDatabase(query: string): Promise<unknown> {
+    // Implement database logic
+    return fetch(`/api/db?q=${encodeURIComponent(query)}`)
+      .then(res => res.json());
   }
 }
+
+// Register custom source processor
+const sourceManager = new SourceProcessorManager();
+sourceManager.register('database', new DatabaseSourceProcessor());
 ```
+
+### 🎛️ Advanced Configuration
+
+Use custom processors in route configurations:
+
+```typescript
+const advancedRoutes = [
+  {
+    name: 'database-routing',
+    type: 'dynamic',
+    processor: 'COMMON_GROUP_PROCESSOR',
+    routes: [
+      {
+        name: 'user-route',
+        type: 'user',
+        processor: 'COMMON_SUB_PROCESSOR',
+        meta: {
+          match: {
+            list: [{
+              origin: { source: 'SELECT role FROM users WHERE id = ?', sourceType: 'database' },
+              criteria: { source: 'admin', sourceType: 'literal' },
+              operator: 'equal'
+            }]
+          },
+          requestRewrites: [{
+            type: 'middleware',
+            value: {
+              source: [
+                ['Auth', { secret: 'admin-secret' }],
+                ['DefaultFetch', {}]
+              ],
+              sourceType: 'literal'
+            },
+            operation: 'set'
+          }]
+        }
+      }
+    ]
+  }
+];
+```
+
+
+
+
 
 ## 🤝 Contributing
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/unieojs/unieo)
