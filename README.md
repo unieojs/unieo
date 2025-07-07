@@ -527,7 +527,7 @@ const routesWithMiddleware = [
 
 ### 🧠 Complex Matching Logic
 
-Create sophisticated matching conditions:
+Unieo's Match system supports sophisticated conditional logic through its Value system:
 
 ```typescript
 const complexRoutes = [
@@ -544,32 +544,63 @@ const complexRoutes = [
           match: {
             list: [
               {
-                // Match specific user agent
+                // Match specific user agent using regex
                 origin: { source: 'user-agent', sourceType: 'request_header' },
                 criteria: { source: 'bot|crawler', sourceType: 'literal' },
                 operator: 'regexp'
               },
               {
-                // Match specific time range (using custom header or request processing)
+                // Match time range (requires middleware to set header)
                 origin: { source: 'x-current-hour', sourceType: 'request_header' },
                 criteria: { source: '9', sourceType: 'literal' },
                 operator: 'gte'
               },
               {
-                // Match specific path
+                // Match API paths using prefix matching
                 origin: { source: 'path', sourceType: 'url' },
                 criteria: { source: '/api/', sourceType: 'literal' },
                 operator: 'prefix'
+              },
+              {
+                // Advanced: Nested value processing
+                origin: {
+                  source: {
+                    userType: { source: 'x-user-type', sourceType: 'request_header' },
+                    region: { source: 'cf-ipcountry', sourceType: 'request_header' }
+                  },
+                  sourceType: 'value_object'
+                },
+                criteria: {
+                  source: { userType: 'premium', region: 'US' },
+                  sourceType: 'literal'
+                },
+                operator: 'equal'
               }
             ],
             operator: 'and' // All conditions must match
-          }
+          },
+          // Apply custom processing when matched
+          requestRewrites: [
+            {
+              type: 'header',
+              field: 'x-route-matched',
+              value: { source: 'complex-route', sourceType: 'literal' },
+              operation: 'set'
+            }
+          ]
         }
       }
     ]
   }
 ];
 ```
+
+#### 🎯 Match System Features
+
+- **Nested Logic**: Support for complex AND/OR operations
+- **Value Integration**: Dynamic value extraction and comparison
+- **Operator Variety**: Equal, regex, prefix, range, and custom operators
+- **Type Coercion**: Automatic type conversion for comparisons
 
 ## 📖 Route Configuration Reference
 
@@ -600,57 +631,347 @@ interface SubRouteConfig {
     redirects?: RedirectConfig[];     // Redirect rules
     requestRewrites?: RequestRewriteConfig[];   // Request modifications
     responseRewrites?: ResponseRewriteConfig[]; // Response modifications
+    [key: string]: unknown;      // Custom meta types via MetaFactory
   };
   args?: Record<string, unknown>; // Processor arguments
 }
 ```
 
-## 🧩 Extending Unieo
+### 📋 Meta Layer Architecture
 
-**Note: The extension system is currently under development. 🚧 The following represents the planned architecture.**
+The Meta layer is the heart of Unieo's processing system, utilizing the Factory pattern for dynamic behavior:
 
-### 🔧 Custom Processors
+#### 🏭 MetaFactory System
 
 ```typescript
-// Custom Group Processor (planned)
-class CustomGroupProcessor extends BaseGroupProcessor {
-  static processorType = 'CUSTOM_GROUP_PROCESSOR';
-  
-  async checkMatch(): Promise<boolean> {
-    // Custom matching logic
-    return true;
-  }
+// Meta types are registered with MetaFactory
+enum MetaType {
+  REDIRECT = 'redirects',
+  REQUEST_REWRITE = 'requestRewrites', 
+  RESPONSE_REWRITE = 'responseRewrites'
 }
 
-// Custom Sub Processor (planned)
-class CustomSubProcessor extends BaseSubProcessor {
-  static processorType = 'CUSTOM_SUB_PROCESSOR';
-  
-  async beforeRequest(): Promise<void> {
-    // Custom request processing
-  }
-  
-  async beforeResponse(): Promise<void> {
-    // Custom response processing
-  }
+// Each meta type has corresponding data structure
+interface SubRouteMetaTypes {
+  redirects?: RawRedirect[];           // Handled by RedirectMeta
+  requestRewrites?: RawRequestRewrite[]; // Handled by RequestRewriteMeta
+  responseRewrites?: RawResponseRewrite[]; // Handled by ResponseRewriteMeta
 }
 ```
 
-### 🏗️ Custom Route Class
+#### 🔄 Meta Processing Flow
+
+1. **Configuration Parsing**: SubProcessor reads meta configuration
+2. **Factory Creation**: MetaFactory creates appropriate Meta instances based on type
+3. **Processing**: Each Meta instance handles its specific logic (redirects, rewrites, etc.)
+4. **Execution**: Executors coordinate Meta processing through the pipeline
+
+#### 🎯 Built-in Meta Types
+
+- **RedirectMeta**: Handles URL redirections with pattern matching
+- **RequestRewriteMeta**: Modifies incoming requests (headers, URL, middleware)
+- **ResponseRewriteMeta**: Transforms outgoing responses (headers, content)
+
+#### 💎 Value System Integration
+
+Meta processing leverages Unieo's powerful Value system for dynamic data extraction and transformation:
 
 ```typescript
-// Extended Route class (planned)
-class CustomRoute extends Route {
-  constructor(data: RouteRawData) {
-    super(data);
-    // Register custom processors
-    this.registerCustomProcessors();
+// Value configuration structure
+interface ValueRawData {
+  source: unknown;           // The data source (header name, URL part, etc.)
+  sourceType: string;        // How to extract the data
+  valueType?: ValueType;     // How to process the extracted data
+}
+
+// Available source types
+enum ValueSourceType {
+  LITERAL = 'literal',                    // Static value
+  REQUEST_HEADER = 'request_header',      // HTTP request header
+  RESPONSE_HEADER = 'response_header',    // HTTP response header  
+  URL = 'url',                           // URL components (path, host, etc.)
+  COOKIE = 'cookie',                     // Cookie values
+  QUERY = 'query',                       // Query parameters
+  FETCH = 'fetch',                       // External API call
+  STRING_TEMPLATE = 'string_template',   // Template with variable substitution
+  VALUE_OBJECT = 'value_object'          // Nested value processing
+}
+
+// Example: Dynamic header based on user location
+const dynamicRewrite = {
+  type: 'header',
+  field: 'x-user-region',
+  value: {
+    source: 'cf-ipcountry',              // Extract from Cloudflare header
+    sourceType: 'request_header',        // Source is a request header
+    valueType: 'string'                  // Process as string
+  },
+  operation: 'set'
+};
+```
+
+#### 🧩 Custom Meta Extension
+
+The Meta system supports custom extensions:
+
+```typescript
+// Define custom meta data structure
+interface CustomValidationMeta {
+  rules: ValidationRule[];
+  onFailure: 'block' | 'warn' | 'log';
+  customHeaders?: Record<string, string>;
+}
+
+// Register custom meta type
+MetaFactory.register('validation', CustomValidationMeta);
+
+// Use in route configuration  
+const routeWithCustomMeta = {
+  meta: {
+    validation: [
+      {
+        rules: [{ field: 'authorization', required: true }],
+        onFailure: 'block',
+        customHeaders: { 'x-validation-error': 'missing-auth' }
+      }
+    ]
   }
-  
-  private registerCustomProcessors() {
-    // Registration logic (under development)
+};
+```
+
+## 🏗️ System Architecture
+
+Unieo adopts a sophisticated multi-layered architecture built on proven design patterns:
+
+### 📐 Architecture Overview
+
+```mermaid
+graph TB
+    subgraph "🚪 Entry Layer"
+        Route[Route Class]
+    end
+    subgraph "🌐 Context Layer"
+        RouteContext[RouteContext]
+        MiddlewareManager[MiddlewareManager]
+        ERPerformance[ERPerformance]
+    end
+    subgraph "🏭 Factory Layer"
+        ProcessorFactory[ProcessorFactory]
+        ExecutorFactory[ExecutorFactory]
+        MetaFactory[MetaFactory]
+    end
+    subgraph "⚙️ Processor Layer"
+        RouteProcessor[RouteProcessor]
+        GroupProcessor[GroupProcessor]
+        SubProcessor[SubProcessor]
+    end
+    subgraph "🔧 Executor Layer"
+        CommonRouteExecutor[CommonRouteExecutor]
+        RedirectExecutor[RedirectExecutor]
+        RequestRewriteExecutor[RequestRewriteExecutor]
+        ResponseRewriteExecutor[ResponseRewriteExecutor]
+    end
+    subgraph "📋 Meta Layer"
+        RedirectMeta[RedirectMeta]
+        RequestRewriteMeta[RequestRewriteMeta]
+        ResponseRewriteMeta[ResponseRewriteMeta]
+    end
+
+    Route --> RouteContext
+    Route --> ProcessorFactory
+    ProcessorFactory --> RouteProcessor
+    RouteProcessor --> GroupProcessor
+    GroupProcessor --> SubProcessor
+    SubProcessor --> MetaFactory
+    MetaFactory --> RedirectMeta
+    MetaFactory --> RequestRewriteMeta
+    MetaFactory --> ResponseRewriteMeta
+    CommonRouteExecutor --> ExecutorFactory
+```
+
+### 🔄 Execution Flow
+
+The system follows a well-defined execution pipeline:
+
+1. **Route Initialization**: Creates RouteContext and ProcessorFactory
+2. **Processor Chain**: RouteProcessor → GroupProcessor → SubProcessor
+3. **Meta Processing**: Dynamic Meta creation via MetaFactory based on configuration
+4. **Executor Chain**: CommonRouteExecutor coordinates specialized executors
+5. **Middleware Pipeline**: Integrated middleware system for request/response processing
+
+For a detailed architecture diagram, see [architecture-diagram.md](./architecture-diagram.md).
+
+### 🚀 Architecture Benefits
+
+- **🔄 Hot-Pluggable Extensions**: Register new Meta types, Executors, and Processors at runtime
+- **🎯 Type-Safe Extensibility**: Full TypeScript support with generic constraints
+- **⚡ Performance Optimized**: Factory pattern with lazy initialization and caching
+- **🧩 Modular Design**: Each layer has clear responsibilities and can be tested independently
+- **🌊 Flexible Data Flow**: Value system enables dynamic data extraction and transformation
+- **🛡️ Error Resilience**: Comprehensive error handling with graceful degradation
+
+### 🎯 Design Patterns
+
+- **Factory Pattern**: Dynamic creation of Processors, Executors, and Meta instances
+- **Strategy Pattern**: Different Meta types implement different processing strategies  
+- **Chain of Responsibility**: Layered processing from Route to Meta
+- **Composite Pattern**: Hierarchical route configuration structure
+
+### 📈 Architecture Evolution
+
+This current architecture represents a significant evolution from earlier versions:
+
+**Previous Approach**: Static, hard-coded route processing with limited extensibility
+**Current Architecture**: Dynamic, factory-based system with full extensibility
+
+**Key Improvements**:
+- **Meta-Driven Design**: Route behavior is now defined by Meta configurations rather than hard-coded logic
+- **Factory Pattern Adoption**: Enables runtime registration and hot-pluggable components  
+- **Value System Integration**: Unified data extraction and transformation across all components
+- **Type Safety**: Full TypeScript support with generic constraints and compile-time verification
+- **Performance Optimization**: Lazy initialization, caching, and optimized execution paths
+
+## 🧩 Extending Unieo
+
+Unieo's architecture is designed for extensibility through its factory-based system:
+
+### 🔧 Custom Meta Types
+
+Create custom Meta types for specialized routing logic:
+
+```typescript
+import { BaseMeta, MetaFactory, MetaType } from 'unieo';
+
+// Define custom meta type
+enum CustomMetaType {
+  CUSTOM_LOGIC = 'customLogic'
+}
+
+// Implement custom meta class
+class CustomMeta extends BaseMeta {
+  private readonly customData: any[];
+
+  constructor(options: {
+    type: string;
+    logger: ILogger;
+    ctx: RouteContext;
+    data: any[];
+    processor: BaseProcessor;
+  }) {
+    super(options);
+    this.customData = options.data;
+  }
+
+  public async process(data?: unknown): Promise<unknown> {
+    // Implement custom processing logic
+    for (const item of this.customData) {
+      // Custom logic here
+      await this.processCustomItem(item);
+    }
+    return data;
+  }
+
+  public needProcess(): boolean {
+    return this.customData.length > 0;
+  }
+
+  private async processCustomItem(item: any): Promise<void> {
+    // Custom item processing
   }
 }
+
+// Register the custom meta type
+MetaFactory.register(CustomMetaType.CUSTOM_LOGIC, CustomMeta);
+```
+
+### � Custom Executors
+
+Extend the execution system with custom executors:
+
+```typescript
+import { BaseExecutor, ExecutorFactory } from 'unieo';
+
+class CustomExecutor extends BaseExecutor {
+  constructor(options: {
+    groupProcessor: GroupProcessor;
+    ctx: RouteContext;
+  }) {
+    super({
+      ...options,
+      type: 'CUSTOM_EXECUTOR'
+    });
+  }
+
+  public async execute() {
+    const result = {
+      success: true,
+      break: false,
+    };
+
+    // Custom execution logic
+    for (const subProcessor of this.groupProcessor.subProcessors) {
+      const subResult = await this.executeCustomLogic(subProcessor);
+      if (!subResult.success) {
+        result.success = false;
+        break;
+      }
+    }
+
+    return result;
+  }
+
+  private async executeCustomLogic(subProcessor: SubProcessor) {
+    // Implement custom executor logic
+    return { success: true, break: false, breakGroup: false };
+  }
+}
+
+// Register the custom executor
+ExecutorFactory.register('CUSTOM_EXECUTOR', CustomExecutor);
+```
+
+### 🎛️ Advanced Route Configuration
+
+Configure routes with custom meta types:
+
+```typescript
+const advancedRoutes = [
+  {
+    name: 'advanced-routing',
+    type: 'custom',
+    processor: 'COMMON_GROUP_PROCESSOR',
+    routes: [
+      {
+        name: 'custom-logic-route',
+        type: 'custom',
+        processor: 'COMMON_SUB_PROCESSOR',
+        meta: {
+          // Standard meta types
+          match: {
+            list: [{
+              origin: { source: 'path', sourceType: 'url' },
+              criteria: { source: '/custom', sourceType: 'literal' },
+              operator: 'equal'
+            }]
+          },
+          // Custom meta type
+          customLogic: [
+            {
+              type: 'validation',
+              rules: ['required', 'format'],
+              action: 'block'
+            },
+            {
+              type: 'transformation', 
+              target: 'headers',
+              operation: 'enhance'
+            }
+          ]
+        }
+      }
+    ]
+  }
+];
 ```
 
 ## 🤝 Contributing
