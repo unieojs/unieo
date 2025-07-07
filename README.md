@@ -138,7 +138,6 @@ addEventListener('fetch', (event: FetchEvent) => {
 ## 🎨 Real-World Examples
 
 > [!NOTE]
-> **Event Type Notice**: While the examples use `FetchEvent` for compatibility, Unieo internally expects `ERFetchEvent` which extends `FetchEvent` with additional edge computing context. In practice, you can use standard `FetchEvent` and it will work correctly. The `ERInfo` interface provides edge computing specific information and will be populated by your edge runtime environment.
 
 ### 🌐 API Gateway
 
