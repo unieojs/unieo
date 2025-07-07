@@ -741,238 +741,136 @@ const routeWithCustomMeta = {
 
 ## 🏗️ System Architecture
 
-Unieo adopts a sophisticated multi-layered architecture built on proven design patterns:
+Unieo adopts a sophisticated multi-layered architecture designed for maximum flexibility and extensibility. The system is built around several key concepts:
 
-### 📐 Architecture Overview
+### 🎯 Core Concepts
 
-```mermaid
-graph TB
-    subgraph "🚪 Entry Layer"
-        Route[Route Class]
-    end
-    subgraph "🌐 Context Layer"
-        RouteContext[RouteContext]
-        MiddlewareManager[MiddlewareManager]
-        ERPerformance[ERPerformance]
-    end
-    subgraph "🏭 Factory Layer"
-        ProcessorFactory[ProcessorFactory]
-        ExecutorFactory[ExecutorFactory]
-        MetaFactory[MetaFactory]
-    end
-    subgraph "⚙️ Processor Layer"
-        RouteProcessor[RouteProcessor]
-        GroupProcessor[GroupProcessor]
-        SubProcessor[SubProcessor]
-    end
-    subgraph "🔧 Executor Layer"
-        CommonRouteExecutor[CommonRouteExecutor]
-        RedirectExecutor[RedirectExecutor]
-        RequestRewriteExecutor[RequestRewriteExecutor]
-        ResponseRewriteExecutor[ResponseRewriteExecutor]
-    end
-    subgraph "📋 Meta Layer"
-        RedirectMeta[RedirectMeta]
-        RequestRewriteMeta[RequestRewriteMeta]
-        ResponseRewriteMeta[ResponseRewriteMeta]
-    end
-
-    Route --> RouteContext
-    Route --> ProcessorFactory
-    ProcessorFactory --> RouteProcessor
-    RouteProcessor --> GroupProcessor
-    GroupProcessor --> SubProcessor
-    SubProcessor --> MetaFactory
-    MetaFactory --> RedirectMeta
-    MetaFactory --> RequestRewriteMeta
-    MetaFactory --> ResponseRewriteMeta
-    CommonRouteExecutor --> ExecutorFactory
-```
+- **Meta-Driven Configuration**: Route behavior is defined by Meta configurations rather than hard-coded logic
+- **Factory Pattern**: Dynamic creation and registration of components (Processors, Executors, Meta types)
+- **Value System**: Unified data extraction and transformation across all components
+- **Middleware Integration**: Comprehensive middleware system for request/response processing
 
 ### 🔄 Execution Flow
 
-The system follows a well-defined execution pipeline:
+Unieo processes routes through a well-defined pipeline:
 
 1. **Route Initialization**: Creates RouteContext and ProcessorFactory
-2. **Processor Chain**: RouteProcessor → GroupProcessor → SubProcessor
-3. **Meta Processing**: Dynamic Meta creation via MetaFactory based on configuration
-4. **Executor Chain**: CommonRouteExecutor coordinates specialized executors
-5. **Middleware Pipeline**: Integrated middleware system for request/response processing
+2. **Configuration Processing**: Parses route configuration and creates appropriate processors
+3. **Meta Processing**: Dynamically creates Meta instances based on configuration
+4. **Execution Pipeline**: Coordinates redirects → request rewrites → middleware → response rewrites
+5. **Response Delivery**: Returns the final processed response
 
-For a detailed architecture diagram, see [architecture-diagram.md](./architecture-diagram.md).
-
-### 🚀 Architecture Benefits
-
-- **🔄 Hot-Pluggable Extensions**: Register new Meta types, Executors, and Processors at runtime
-- **🎯 Type-Safe Extensibility**: Full TypeScript support with generic constraints
-- **⚡ Performance Optimized**: Factory pattern with lazy initialization and caching
-- **🧩 Modular Design**: Each layer has clear responsibilities and can be tested independently
-- **🌊 Flexible Data Flow**: Value system enables dynamic data extraction and transformation
-- **🛡️ Error Resilience**: Comprehensive error handling with graceful degradation
-
-### 🎯 Design Patterns
-
-- **Factory Pattern**: Dynamic creation of Processors, Executors, and Meta instances
-- **Strategy Pattern**: Different Meta types implement different processing strategies  
-- **Chain of Responsibility**: Layered processing from Route to Meta
-- **Composite Pattern**: Hierarchical route configuration structure
-
-### 📈 Architecture Evolution
-
-This current architecture represents a significant evolution from earlier versions:
-
-**Previous Approach**: Static, hard-coded route processing with limited extensibility
-**Current Architecture**: Dynamic, factory-based system with full extensibility
-
-**Key Improvements**:
-- **Meta-Driven Design**: Route behavior is now defined by Meta configurations rather than hard-coded logic
-- **Factory Pattern Adoption**: Enables runtime registration and hot-pluggable components  
-- **Value System Integration**: Unified data extraction and transformation across all components
-- **Type Safety**: Full TypeScript support with generic constraints and compile-time verification
-- **Performance Optimization**: Lazy initialization, caching, and optimized execution paths
+> 📋 **Detailed Architecture**: For comprehensive architecture diagrams and detailed technical specifications, see [architecture-diagram.md](./architecture-diagram.md).
 
 ## 🧩 Extending Unieo
 
-Unieo's architecture is designed for extensibility through its factory-based system:
+Unieo supports extensibility through custom middleware and value processors:
 
-### 🔧 Custom Meta Types
+### 🔗 Custom Middleware
 
-Create custom Meta types for specialized routing logic:
-
-```typescript
-import { BaseMeta, MetaFactory, MetaType } from 'unieo';
-
-// Define custom meta type
-enum CustomMetaType {
-  CUSTOM_LOGIC = 'customLogic'
-}
-
-// Implement custom meta class
-class CustomMeta extends BaseMeta {
-  private readonly customData: any[];
-
-  constructor(options: {
-    type: string;
-    logger: ILogger;
-    ctx: RouteContext;
-    data: any[];
-    processor: BaseProcessor;
-  }) {
-    super(options);
-    this.customData = options.data;
-  }
-
-  public async process(data?: unknown): Promise<unknown> {
-    // Implement custom processing logic
-    for (const item of this.customData) {
-      // Custom logic here
-      await this.processCustomItem(item);
-    }
-    return data;
-  }
-
-  public needProcess(): boolean {
-    return this.customData.length > 0;
-  }
-
-  private async processCustomItem(item: any): Promise<void> {
-    // Custom item processing
-  }
-}
-
-// Register the custom meta type
-MetaFactory.register(CustomMetaType.CUSTOM_LOGIC, CustomMeta);
-```
-
-### � Custom Executors
-
-Extend the execution system with custom executors:
+The most common way to extend Unieo is through custom middleware:
 
 ```typescript
-import { BaseExecutor, ExecutorFactory } from 'unieo';
+import type { MiddlewareGen, BaseMiddlewareOption, RouteContext, MiddlewareNext } from 'unieo';
 
-class CustomExecutor extends BaseExecutor {
-  constructor(options: {
-    groupProcessor: GroupProcessor;
-    ctx: RouteContext;
-  }) {
-    super({
-      ...options,
-      type: 'CUSTOM_EXECUTOR'
-    });
-  }
+// Define middleware options
+interface AuthMiddlewareOption extends BaseMiddlewareOption {
+  secret: string;
+  headerName?: string;
+}
 
-  public async execute() {
-    const result = {
-      success: true,
-      break: false,
-    };
-
-    // Custom execution logic
-    for (const subProcessor of this.groupProcessor.subProcessors) {
-      const subResult = await this.executeCustomLogic(subProcessor);
-      if (!subResult.success) {
-        result.success = false;
-        break;
-      }
+// Create middleware
+const AuthMiddleware: MiddlewareGen<AuthMiddlewareOption> = (opt) => {
+  return async (ctx: RouteContext, next: MiddlewareNext) => {
+    const { secret, headerName = 'authorization' } = opt;
+    const authHeader = ctx.request.headers.get(headerName);
+    
+    if (!authHeader || !authHeader.includes(secret)) {
+      ctx.setResponse(new Response('Unauthorized', { status: 401 }));
+      return;
     }
+    
+    await next();
+  };
+};
 
-    return result;
+// Register and use
+const route = new Route({
+  event,
+  middlewares: [['Auth', AuthMiddleware]]
+});
+```
+
+### 💎 Custom Value Processors
+
+Extend the Value system for custom data sources:
+
+```typescript
+import { SourceProcessorManager } from 'unieo';
+
+class DatabaseSourceProcessor implements ISourceProcessor {
+  async getSource({ source }: IValue, ctx: RouteContext): Promise<unknown> {
+    // Custom database lookup
+    const query = source as string;
+    return await this.queryDatabase(query);
   }
-
-  private async executeCustomLogic(subProcessor: SubProcessor) {
-    // Implement custom executor logic
-    return { success: true, break: false, breakGroup: false };
+  
+  private async queryDatabase(query: string): Promise<unknown> {
+    // Implement database logic
+    return fetch(`/api/db?q=${encodeURIComponent(query)}`)
+      .then(res => res.json());
   }
 }
 
-// Register the custom executor
-ExecutorFactory.register('CUSTOM_EXECUTOR', CustomExecutor);
+// Register custom source processor
+const sourceManager = new SourceProcessorManager();
+sourceManager.register('database', new DatabaseSourceProcessor());
 ```
 
-### 🎛️ Advanced Route Configuration
+### 🎛️ Advanced Configuration
 
-Configure routes with custom meta types:
+Use custom processors in route configurations:
 
 ```typescript
 const advancedRoutes = [
   {
-    name: 'advanced-routing',
-    type: 'custom',
+    name: 'database-routing',
+    type: 'dynamic',
     processor: 'COMMON_GROUP_PROCESSOR',
     routes: [
       {
-        name: 'custom-logic-route',
-        type: 'custom',
+        name: 'user-route',
+        type: 'user',
         processor: 'COMMON_SUB_PROCESSOR',
         meta: {
-          // Standard meta types
           match: {
             list: [{
-              origin: { source: 'path', sourceType: 'url' },
-              criteria: { source: '/custom', sourceType: 'literal' },
+              origin: { source: 'SELECT role FROM users WHERE id = ?', sourceType: 'database' },
+              criteria: { source: 'admin', sourceType: 'literal' },
               operator: 'equal'
             }]
           },
-          // Custom meta type
-          customLogic: [
-            {
-              type: 'validation',
-              rules: ['required', 'format'],
-              action: 'block'
+          requestRewrites: [{
+            type: 'middleware',
+            value: {
+              source: [
+                ['Auth', { secret: 'admin-secret' }],
+                ['DefaultFetch', {}]
+              ],
+              sourceType: 'literal'
             },
-            {
-              type: 'transformation', 
-              target: 'headers',
-              operation: 'enhance'
-            }
-          ]
+            operation: 'set'
+          }]
         }
       }
     ]
   }
 ];
 ```
+
+> 🔧 **Advanced Extensions**: For deep architectural extensions (custom Meta types, Executors), see the detailed extension guide in [architecture-diagram.md](./architecture-diagram.md).
+
+
 
 ## 🤝 Contributing
 [![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/unieojs/unieo)
