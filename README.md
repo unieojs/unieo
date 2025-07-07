@@ -760,7 +760,7 @@ Unieo processes routes through a well-defined pipeline:
 4. **Execution Pipeline**: Coordinates redirects → request rewrites → middleware → response rewrites
 5. **Response Delivery**: Returns the final processed response
 
-> 📋 **Detailed Architecture**: For comprehensive architecture diagrams and detailed technical specifications, see [architecture-diagram.md](./architecture-diagram.md).
+
 
 ## 🧩 Extending Unieo
 
@@ -868,7 +868,7 @@ const advancedRoutes = [
 ];
 ```
 
-> 🔧 **Advanced Extensions**: For deep architectural extensions (custom Meta types, Executors), see the detailed extension guide in [architecture-diagram.md](./architecture-diagram.md).
+
 
 
 
