@@ -332,7 +332,6 @@ Serve localized content based on user location:
 - **Match logic**: Uses `sourceType: 'request_header'` with `source: 'cf-ipcountry'` to get user's country from Cloudflare's geolocation header
 - **Response rewrite**: Sets `x-privacy-policy: gdpr-compliant` header for EU users
 
-> **Geolocation Headers**: This example uses Cloudflare's `cf-ipcountry` header. Different edge platforms provide different geolocation headers (e.g., Vercel uses `x-vercel-ip-country`, AWS CloudFront uses `cloudfront-viewer-country`). Adapt the header name based on your edge platform.
 
 ```typescript
 const geoRoutes = [
