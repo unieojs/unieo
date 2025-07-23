@@ -1,3 +1,9 @@
+## [1.1.0](https://github.com/unieojs/unieo/compare/v1.0.0...v1.1.0) (2025-07-23)
+
+### 🚀 Features
+
+* **core:** export CommonRouteExecutor ([#41](https://github.com/unieojs/unieo/issues/41)) ([f8f62f6](https://github.com/unieojs/unieo/commit/f8f62f6646b4f9fb5ba770008a1acbb2728b3b27))
+
 ## 1.0.0 (2025-07-07)
 
 ### 🚀 Features

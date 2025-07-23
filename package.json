@@ -1,6 +1,6 @@
 {
   "name": "@unieojs/unieo",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "🐚 A schema-driven routing engine for edge computing environments.",
   "dependencies": {
     "cookie": "^0.5.0",
