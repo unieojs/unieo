@@ -8,3 +8,4 @@ export * from './executor';
 export * from './meta';
 export * from './RouteContext';
 export * from './ERPerformance';
+export * from './CommonRouteExecutor';
