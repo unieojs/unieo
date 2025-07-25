@@ -11,14 +11,14 @@ describe('test/core/RouteContext.test.ts', () => {
     it('should work', () => {
       const ctx = TestUtil.mockRouteContext();
       ctx.logError(
-        genError(ErrorCode.EdgeKVTimeoutError, {
+        genError(ErrorCode.TimeoutError, {
           message: 'mock_message',
           summary: 'foo',
           stack: 'mock_stack',
         }),
       );
       ctx.logError(
-        genError(ErrorCode.EdgeKVRequestError, {
+        genError(ErrorCode.SystemError, {
           message: 'mock_message',
           summary: 'bar',
           stack: 'mock_stack',
@@ -27,7 +27,7 @@ describe('test/core/RouteContext.test.ts', () => {
       const res = new Response('ok');
       const newRes = ctx.appendExtInfoToResponse(res);
       const xRenderRouteError = newRes.headers.get('x-unio-error');
-      assert.strictEqual(xRenderRouteError, '2003_foo|2002_bar');
+      assert.strictEqual(xRenderRouteError, '1002_foo|1001_bar');
     });
 
     it('should empty work', () => {
@@ -36,7 +36,7 @@ describe('test/core/RouteContext.test.ts', () => {
       const res = new Response('ok');
       const newRes = ctx.appendExtInfoToResponse(res);
       const xRenderRouteError = newRes.headers.get('x-unio-error');
-      assert.strictEqual(xRenderRouteError, '3001');
+      assert.strictEqual(xRenderRouteError, '1001');
     });
   });
 
@@ -66,7 +66,7 @@ describe('test/core/RouteContext.test.ts', () => {
           stack: new Error('mock_message').stack,
         }),
       );
-      expect(logErrorSpy.mock.calls[0][0]).toContain('3001 foo\nError: mock_message\n');
+      expect(logErrorSpy.mock.calls[0][0]).toContain('1001 foo\nError: mock_message\n');
     });
 
     it('origin logger object should not be modified', async () => {
@@ -90,7 +90,7 @@ describe('test/core/RouteContext.test.ts', () => {
           stack: new Error('mock_message').stack,
         }),
       );
-      expect(errorMock.mock.calls[0][0]).toContain('3001 foo\nError: mock_message\n');
+      expect(errorMock.mock.calls[0][0]).toContain('1001 foo\nError: mock_message\n');
       expect(logger.error).toBe(errorMock);
       expect(logger.info).toBe(infoMock);
       expect(logger.warn).toBe(warnMock);
