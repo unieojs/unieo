@@ -32,7 +32,7 @@ const DefaultFetch: MiddlewareGen<DefaultFetchMiddlewareOption> = opt => {
       !isAvailableResponse(response, { availableStatusList })
     ) {
       ctx.logError(
-        genError(ErrorCode.RequestMiddlewareResponseInvalidError, {
+        genError(ErrorCode.MiddlewareResponseInvalidError, {
           message: `status: ${response.status}`,
           summary: `${response.status}`,
         }),

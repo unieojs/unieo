@@ -18,7 +18,7 @@ const ErrorFallback: MiddlewareGen<ErrorFallbackMiddlewareOption> = opt => {
       await next();
       const availableStatusList = allowNotFound ? [ 404 ] : [];
       if (!isAvailableResponse(ctx.response, { availableStatusList })) {
-        throw genError(ErrorCode.RequestMiddlewareResponseInvalidError, {
+        throw genError(ErrorCode.MiddlewareResponseInvalidError, {
           message: `status: ${ctx.response?.status}`,
           summary: `${ctx.response?.status}`,
         });

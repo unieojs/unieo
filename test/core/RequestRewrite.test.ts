@@ -448,7 +448,7 @@ describe('test/core/RequestRewrite.test.ts', () => {
       await requestRewrite.rewrite(ctx.request, ctx);
       assert.fail('should not execute');
     } catch (err) {
-      assert.strictEqual((err as BaseError).code, ErrorCode.RequestMiddlewareNotFoundError);
+      assert.strictEqual((err as BaseError).code, ErrorCode.LoadMiddlewareNotFoundError);
     }
   });
 

@@ -42,7 +42,7 @@ export class MiddlewareManager {
     const [ name, opt ] = config;
     const mwGen = this.#presetMiddlewares.get(name);
     if (!mwGen) {
-      throw genError(ErrorCode.RequestMiddlewareNotFoundError, {
+      throw genError(ErrorCode.LoadMiddlewareNotFoundError, {
         summary: name,
       });
     }
@@ -62,7 +62,7 @@ export class MiddlewareManager {
     // 校验 middleware 是否存在
     const name = middleware[0];
     if (!this.#presetMiddlewares.has(name)) {
-      throw genError(ErrorCode.RequestMiddlewareNotFoundError, {
+      throw genError(ErrorCode.LoadMiddlewareNotFoundError, {
         summary: name,
         message: 'Middleware not found: ' + name,
       });
