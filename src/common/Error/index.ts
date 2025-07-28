@@ -13,7 +13,7 @@ type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 type ErrorOption = PartialBy<Omit<BaseErrorOptions, 'code'>, 'name'>;
 
 export enum ErrorCode {
-  /* SYSTEM ERROR - 3xxx */
+  /* SYSTEM ERROR - 1xxx */
   SystemError = 1001,
   TimeoutError = 1002,
   /* INITIALIZATION ERROR - 2xxx */
