@@ -67,30 +67,38 @@ const ERROR_DEFINITION: Record<ErrorCode, ErrorConfig> = {
   },
 };
 
-export function genError(code: ErrorCode, errorOption?: string | ErrorOption | Error): BaseError {
-  let errorConfig = ERROR_DEFINITION[code];
-  let errorMessage = errorConfig.message;
-  if (typeof errorOption === 'string') {
-    errorMessage += `: ${errorOption}`;
-  } else if (errorOption instanceof Error) {
-    errorMessage += `: ${errorOption.message}`;
-    errorConfig = {
+export function createErrorGenerator<T extends number = never>(definition?: Record<T, ErrorConfig>) {
+  return (code: T | ErrorCode, errorOption?: string | ErrorOption | Error): BaseError => {
+    const mergedDefinition: Record<number, ErrorConfig> = {
+      ...ERROR_DEFINITION,
+      ...definition,
+    };
+    let errorConfig: ErrorConfig = mergedDefinition[code];
+    let errorMessage = errorConfig.message;
+    if (typeof errorOption === 'string') {
+      errorMessage += `: ${errorOption}`;
+    } else if (errorOption instanceof Error) {
+      errorMessage += `: ${errorOption.message}`;
+      errorConfig = {
+        ...errorConfig,
+        // 原生异常的 name 跟 stack 都不可枚举，不能用析构
+        name: errorOption.name,
+        stack: errorOption.stack,
+      } as ErrorConfig;
+    } else if (errorOption?.message) {
+      errorMessage += `: ${errorOption.message as string}`;
+      errorConfig = {
+        ...errorConfig,
+        ...errorOption,
+      } as ErrorConfig;
+    }
+    // 将 error 转换为标准的 error 模型
+    return new BaseError({
       ...errorConfig,
-      // 原生异常的 name 跟 stack 都不可枚举，不能用析构
-      name: errorOption.name,
-      stack: errorOption.stack,
-    } as ErrorConfig;
-  } else if (errorOption?.message) {
-    errorMessage += `: ${errorOption.message as string}`;
-    errorConfig = {
-      ...errorConfig,
-      ...errorOption,
-    } as ErrorConfig;
-  }
-  // 将 error 转换为标准的 error 模型
-  return new BaseError({
-    ...errorConfig,
-    code,
-    message: errorMessage,
-  });
+      code,
+      message: errorMessage,
+    });
+  };
 }
+
+export const genError = createErrorGenerator();
