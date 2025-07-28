@@ -1,3 +1,9 @@
+## [1.2.0](https://github.com/unieojs/unieo/compare/v1.1.0...v1.2.0) (2025-07-28)
+
+### 🚀 Features
+
+* **core:** re-optimize error code ([#42](https://github.com/unieojs/unieo/issues/42)) ([f92e6c7](https://github.com/unieojs/unieo/commit/f92e6c739837737e80d872b6bd7ca9e2134777a4))
+
 ## [1.1.0](https://github.com/unieojs/unieo/compare/v1.0.0...v1.1.0) (2025-07-23)
 
 ### 🚀 Features
