@@ -13,19 +13,19 @@ type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>;
 type ErrorOption = PartialBy<Omit<BaseErrorOptions, 'code'>, 'name'>;
 
 export enum ErrorCode {
-  /* SYSTEM ERROR - 1xxx */
+  /* SYSTEM ERROR - 10xx */
   SystemError = 1001,
   TimeoutError = 1002,
-  /* INITIALIZATION ERROR - 2xxx */
-  GroupProcessorNotFoundError = 2001,
-  SubProcessorNotFoundError = 2002,
-  LoadMiddlewareNotFoundError = 2003,
-  /* ROUTE META ERROR - 3xxx */
-  SubRouteRedirectError = 3001,
-  SubRouteBeforeRequestError = 3002,
-  SubRouteBeforeResponseError = 3003,
-  /* MIDDLEWARE ERROR - 4xxx */
-  MiddlewareResponseInvalidError = 4001,
+  /* INITIALIZATION ERROR - 11xx */
+  GroupProcessorNotFoundError = 1101,
+  SubProcessorNotFoundError = 1102,
+  LoadMiddlewareNotFoundError = 1103,
+  /* ROUTE META ERROR - 12xx */
+  SubRouteRedirectError = 1201,
+  SubRouteBeforeRequestError = 1202,
+  SubRouteBeforeResponseError = 1203,
+  /* MIDDLEWARE ERROR - 13xx */
+  MiddlewareResponseInvalidError = 1301,
 }
 
 const ERROR_DEFINITION: Record<ErrorCode, ErrorConfig> = {
