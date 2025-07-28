@@ -13,13 +13,6 @@ export enum SubProcessorType {
   COMMON_SUB_PROCESSOR = 'COMMON_SUB_PROCESSOR',
 }
 
-export enum RouteType {
-  // AUTH 分组
-  AUTH_GROUP_ROUTE = 'AUTH_GROUP_ROUTE',
-  // 灰度分组
-  GREY_GROUP_ROUTE = 'GREY_GROUP_ROUTE',
-}
-
 export enum MatchOperator {
   AND = 'and',
   OR = 'or',
