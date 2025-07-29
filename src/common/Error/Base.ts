@@ -12,6 +12,7 @@ export class BaseError<T extends BaseErrorOptions = BaseErrorOptions> extends Er
   public details?: string;
   public needReport: boolean;
   protected options?: T;
+
   constructor(options?: T) {
     super(options?.message);
     this.options = options ?? ({} as T);
