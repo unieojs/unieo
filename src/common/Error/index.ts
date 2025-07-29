@@ -69,10 +69,10 @@ const ERROR_DEFINITION: Record<ErrorCode, ErrorConfig> = {
 
 export function createErrorGenerator<T extends number = never>(definition?: Record<T, ErrorConfig>) {
   return (code: T | ErrorCode, errorOption?: string | ErrorOption | Error): BaseError => {
-    const mergedDefinition: Record<number, ErrorConfig> = {
+    const mergedDefinition = {
       ...ERROR_DEFINITION,
       ...definition,
-    };
+    } as Record<T | ErrorCode, ErrorConfig>;
     let errorConfig: ErrorConfig = mergedDefinition[code];
     let errorMessage = errorConfig.message;
     if (typeof errorOption === 'string') {
