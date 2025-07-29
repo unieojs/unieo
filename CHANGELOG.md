@@ -1,3 +1,9 @@
+## [1.3.0](https://github.com/unieojs/unieo/compare/v1.2.0...v1.3.0) (2025-07-29)
+
+### 🚀 Features
+
+* **core:** export createErrorGenerator ([#43](https://github.com/unieojs/unieo/issues/43)) ([c731e5f](https://github.com/unieojs/unieo/commit/c731e5faf410722107704177e8533da6a5a09634))
+
 ## [1.2.0](https://github.com/unieojs/unieo/compare/v1.1.0...v1.2.0) (2025-07-28)
 
 ### 🚀 Features
