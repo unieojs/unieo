@@ -32,7 +32,7 @@ export class RedirectMeta extends BaseMeta {
       const rawRedirects = await this.redirectValue.get(this.ctx);
       redirects = rawRedirects.map(raw => new Redirect(raw, this.processor));
     }
-    if (!redirects) {
+    if (!redirects || redirects.length === 0) {
       return;
     }
     for (const redirect of redirects) {
