@@ -1,12 +1,13 @@
-import { SourceProcessorManager } from './SourceProcessorManager';
-import { ValueProcessorManager } from './ValueProcessorManager';
-import type { ValueSourceType, ValueType } from '../../common/Enum';
+import { ValueSourceType, ValueType } from '../../common/Enum';
+import type { BaseProcessor } from '../processor';
 import type { RouteContext } from '../RouteContext';
 import type { ISourceProcessor } from './SourceProcessor';
+import { SourceProcessorManager } from './SourceProcessorManager';
 import type { IValueProcessor } from './ValueProcessor';
-import type { BaseProcessor } from '../processor';
+import { ValueProcessorManager } from './ValueProcessorManager';
 
-export type { ISourceProcessor, IValueProcessor, ValueSourceType, ValueType };
+export type { ISourceProcessor, IValueProcessor };
+export { ValueType, ValueSourceType };
 
 export const sourceProcessorManager = new SourceProcessorManager();
 
