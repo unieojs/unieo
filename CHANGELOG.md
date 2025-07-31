@@ -1,3 +1,18 @@
+## [1.4.0](https://github.com/unieojs/unieo/compare/v1.3.0...v1.4.0) (2025-07-31)
+
+### 🚀 Features
+
+* redirect support value ([#44](https://github.com/unieojs/unieo/issues/44)) ([70c3303](https://github.com/unieojs/unieo/commit/70c330343fe05b67e6b1c9fe036094538b1917e7))
+
+### 🐛 Bug Fixes
+
+* **Route:** add generic type to CommonRouteExecutor ([#45](https://github.com/unieojs/unieo/issues/45)) ([f33c32c](https://github.com/unieojs/unieo/commit/f33c32cac9732a56ef8e2474131326cd62b5f22c))
+* **types:** export enum not just type ([#47](https://github.com/unieojs/unieo/issues/47)) ([db00b7d](https://github.com/unieojs/unieo/commit/db00b7d3d00911e8931c570a81effaafe937be96))
+
+### ♻️ Code Refactoring
+
+* add generic to RedirectMeta ([#46](https://github.com/unieojs/unieo/issues/46)) ([e4063ce](https://github.com/unieojs/unieo/commit/e4063ce42f3e40396678b3dcbdff835b954ace40))
+
 ## [1.3.0](https://github.com/unieojs/unieo/compare/v1.2.0...v1.3.0) (2025-07-29)
 
 ### 🚀 Features
