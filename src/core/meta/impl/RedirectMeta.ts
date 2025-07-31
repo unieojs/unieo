@@ -33,15 +33,14 @@ export class RedirectMeta<
   }
 
   public async process(): Promise<Response | undefined> {
-    const redirects = this.redirects;
-    if (this.redirectValue) {
+    if (!this.redirects && this.redirectValue) {
       const rawRedirects = await this.redirectValue.get(this.ctx);
       this.setRedirects(rawRedirects);
     }
-    if (!redirects || redirects.length === 0) {
+    if (!this.redirects || this.redirects.length === 0) {
       return;
     }
-    for (const redirect of redirects) {
+    for (const redirect of this.redirects) {
       const res = await redirect.redirect(this.ctx);
       if (res) {
         // 重定向生效，跳过后续
