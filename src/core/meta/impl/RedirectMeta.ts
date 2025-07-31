@@ -7,10 +7,8 @@ import type { BaseProcessor } from '../../processor';
 import type { ValueRawData } from '../../value';
 import { Value } from '../../value';
 
-export class RedirectMeta<
-  T extends Redirect = Redirect,
-> extends BaseMeta {
-  protected redirects?: T[];
+export class RedirectMeta extends BaseMeta {
+  private redirects?: Redirect[];
   private readonly redirectValue?: Value<RawRedirect[]>;
 
   constructor(options: {
@@ -22,20 +20,20 @@ export class RedirectMeta<
   }) {
     super(options);
     if (Array.isArray(options.data)) {
-      this.setRedirects(options.data);
+      this.redirects = this.buildRedirects(options.data);
     } else {
       this.redirectValue = new Value(options.data, options.processor);
     }
   }
 
-  protected setRedirects(raw: RawRedirect[]) {
-    this.redirects = raw.map(raw => new Redirect(raw, this.processor) as T);
+  protected buildRedirects(rawRedirects: RawRedirect[]) {
+    return rawRedirects.map(raw => new Redirect(raw, this.processor));
   }
 
   public async process(): Promise<Response | undefined> {
     if (!this.redirects && this.redirectValue) {
       const rawRedirects = await this.redirectValue.get(this.ctx);
-      this.setRedirects(rawRedirects);
+      this.redirects = this.buildRedirects(rawRedirects);
     }
     if (!this.redirects || this.redirects.length === 0) {
       return;
