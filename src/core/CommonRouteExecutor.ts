@@ -1,7 +1,8 @@
 import { RouteExecutor } from './executor';
 import { MetaType } from './meta';
+import type { RouteContext } from './RouteContext';
 
-export class CommonRouteExecutor extends RouteExecutor {
+export class CommonRouteExecutor<T extends RouteContext> extends RouteExecutor<T> {
   public async redirect() {
     await this.executeMeta(MetaType.REDIRECT);
   }
