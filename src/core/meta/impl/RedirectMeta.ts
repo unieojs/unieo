@@ -31,14 +31,15 @@ export class RedirectMeta extends BaseMeta {
   }
 
   public async process(): Promise<Response | undefined> {
-    if (!this.redirects && this.redirectValue) {
+    let redirects = this.redirects;
+    if (!redirects && this.redirectValue) {
       const rawRedirects = await this.redirectValue.get(this.ctx);
-      this.redirects = this.buildRedirects(rawRedirects);
+      redirects = this.buildRedirects(rawRedirects);
     }
-    if (!this.redirects || this.redirects.length === 0) {
+    if (!redirects || redirects.length === 0) {
       return;
     }
-    for (const redirect of this.redirects) {
+    for (const redirect of redirects) {
       const res = await redirect.redirect(this.ctx);
       if (res) {
         // 重定向生效，跳过后续
