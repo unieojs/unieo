@@ -36,7 +36,6 @@ export class RedirectMeta<
     const redirects = this.redirects;
     if (this.redirectValue) {
       const rawRedirects = await this.redirectValue.get(this.ctx);
-      console.log(rawRedirects);
       this.setRedirects(rawRedirects);
     }
     if (!redirects || redirects.length === 0) {
