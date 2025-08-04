@@ -101,7 +101,7 @@ export class TestUtil {
   static mockCommonSubProcessor(ctx?: RouteContext, subRouteConfig?: Partial<SubRawRoute>): SubProcessor {
     ctx = ctx ?? TestUtil.mockRouteContext();
     const subRawRoute = TestUtil.mockSubRouteConfig(subRouteConfig);
-    return SubProcessor.create(ctx, TestUtil.mockSubRouteConfig(subRouteConfig), TestUtil.mockHelper({
+    return SubProcessor.create(ctx, subRawRoute, TestUtil.mockHelper({
       logger: new PrefixLogger(`[sub/${subRawRoute.name}]`, console),
     }));
   }
