@@ -14,6 +14,7 @@ import {
   ValueSourceType,
 } from '../src/common/Enum';
 import type { GroupRawRoute, SubRawRoute, RouteProcessorData , RawRedirect, RawRequestRewrite, RawResponseRewrite } from '../src';
+import { PrefixLogger } from '../src/util/PrefixLogger';
 
 export const fetchMock = getMiniflareFetchMock();
 fetchMock.disableNetConnect();
@@ -99,7 +100,10 @@ export class TestUtil {
 
   static mockCommonSubProcessor(ctx?: RouteContext, subRouteConfig?: Partial<SubRawRoute>): SubProcessor {
     ctx = ctx ?? TestUtil.mockRouteContext();
-    return SubProcessor.create(ctx, TestUtil.mockSubRouteConfig(subRouteConfig), TestUtil.mockHelper());
+    const subRawRoute = TestUtil.mockSubRouteConfig(subRouteConfig);
+    return SubProcessor.create(ctx, TestUtil.mockSubRouteConfig(subRouteConfig), TestUtil.mockHelper({
+      logger: new PrefixLogger(`[sub/${subRawRoute.name}]`, console),
+    }));
   }
 
   static mockCommonGroupProcessor(
@@ -109,11 +113,14 @@ export class TestUtil {
   ): GroupProcessor {
     ctx = ctx ?? TestUtil.mockRouteContext();
     subProcessors = subProcessors ?? [ TestUtil.mockCommonSubProcessor(ctx) ];
+    const groupRawRoute = TestUtil.mockGroupRouteConfig(groupRouteConfig);
     return GroupProcessor.create(
       ctx,
-      TestUtil.mockGroupRouteConfig(groupRouteConfig),
+      groupRawRoute,
       subProcessors,
-      TestUtil.mockHelper(),
+      TestUtil.mockHelper({
+        logger: new PrefixLogger(`[group/${groupRawRoute.name}]`, console),
+      }),
     );
   }
 

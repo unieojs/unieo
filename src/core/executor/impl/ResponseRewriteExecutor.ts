@@ -17,6 +17,7 @@ export class ResponseRewriteExecutor extends BaseExecutor {
   }
 
   public async executeSub(subProcessor: SubProcessor, response: Response) {
+    const logger = subProcessor.logger;
     const result: SubExecuteResult<Response> = {
       success: true,
       break: false,
@@ -28,15 +29,15 @@ export class ResponseRewriteExecutor extends BaseExecutor {
     }
     const matchResult = await subProcessor.checkMatch();
     if (!matchResult) {
-      this.logger.info('not match, skipped');
+      logger.info('not match, skipped');
       return result;
     }
-    this.logger.info('beforeResponse started');
+    logger.info('beforeResponse started');
     result.break = subProcessor.break;
     result.breakGroup = subProcessor.breakGroup;
     try {
       result.result = await subProcessor.process(this.type, response) as Response;
-      this.logger.info('beforeResponse succeed');
+      logger.info('beforeResponse succeed');
     } catch (err) {
       const error = genError(ErrorCode.SubRouteBeforeResponseError, {
         message: (err as Error).message,
