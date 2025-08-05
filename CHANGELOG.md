@@ -1,3 +1,9 @@
+## [1.4.1](https://github.com/unieojs/unieo/compare/v1.4.0...v1.4.1) (2025-08-05)
+
+### 🐛 Bug Fixes
+
+* **log:** sub executor should log with subProcessor ([#48](https://github.com/unieojs/unieo/issues/48)) ([d5711ba](https://github.com/unieojs/unieo/commit/d5711ba0cfaa1891f12b84212c6e12afe2cf7244))
+
 ## [1.4.0](https://github.com/unieojs/unieo/compare/v1.3.0...v1.4.0) (2025-07-31)
 
 ### 🚀 Features
