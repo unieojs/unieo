@@ -17,6 +17,7 @@ export class RedirectExecutor extends BaseExecutor {
   }
 
   public async executeSub(subProcessor: SubProcessor) {
+    const logger = subProcessor.logger;
     const result: SubExecuteResult<Response> = {
       success: true,
       break: false,
@@ -27,16 +28,16 @@ export class RedirectExecutor extends BaseExecutor {
     }
     const matchResult = await subProcessor.checkMatch();
     if (!matchResult) {
-      this.logger.info('not match, skipped');
+      logger.info('not match, skipped');
       return result;
     }
-    this.logger.info('redirect started');
+    logger.info('redirect started');
     try {
       result.result = (await subProcessor.process(this.type)) as Response | undefined;
       // 重定向命中后，默认 break 和 breakGroup
       result.break = !!result.result;
       result.breakGroup = result.break;
-      this.logger.info('redirect succeed');
+      logger.info('redirect succeed');
     } catch (err) {
       const error = genError(ErrorCode.SubRouteRedirectError, {
         message: (err as Error).message,
