@@ -8,6 +8,7 @@ import {
   ValueSourceType,
 } from '../../src/common/Enum';
 import { ErrorCode, type BaseError } from '../../src/common/Error';
+import type { RouteContext } from '../../src/core';
 import { RequestRewrite } from '../../src/core';
 import { PathRegexpType } from '../../src/util/PathRegexp';
 import { TestUtil } from '../TestUtil';
@@ -316,7 +317,7 @@ describe('test/core/RequestRewrite.test.ts', () => {
     const ctx = TestUtil.mockRouteContext({
       url: 'https://www.example.com?a=1&b=2',
     });
-    let requestRewrite = new RequestRewrite(
+    let requestRewrite: RequestRewrite = new RequestRewrite(
       {
         type: RequestRewriteType.MIDDLEWARE,
         field: '',
@@ -524,6 +525,87 @@ describe('test/core/RequestRewrite.test.ts', () => {
       assert.strictEqual(request.url, 'https://www.exampleplus.com/');
       assert.strictEqual(request.headers.get('cookie'), 'mock_cookie');
       assert.strictEqual(request.headers.get('custom-test-header'), null);
+    });
+  });
+
+  describe('extends', () => {
+    it('override rewriteUrl should work', async () => {
+      class CustomRequestRewrite extends RequestRewrite {
+        protected override rewriteUrl(ctx: RouteContext, request: Request): Request {
+          const url = new URL('https://www.example.com');
+          return new Request(url.toString(), {
+            method: request.method,
+            headers: request.headers,
+          });
+        }
+      }
+
+      const ctx = TestUtil.mockRouteContext({
+        url: 'https://www.example.com',
+      });
+      const requestRewrite = new CustomRequestRewrite(
+        {
+          type: RequestRewriteType.URL,
+          field: UrlValueType.HREF,
+          value: {
+            source: 'https://www.custom.com',
+            sourceType: ValueSourceType.LITERAL,
+          },
+          operation: RewriteOperation.SET,
+        },
+        TestUtil.mockCommonSubProcessor(),
+      );
+      const request = await requestRewrite.rewrite(ctx.request, ctx);
+      assert.strictEqual(request.url, 'https://www.example.com/');
+    });
+
+    it('extendRewrite should work', async () => {
+      class CustomRequestRewrite extends RequestRewrite<'custom' | 'custom2'> {
+        protected override async extendRewrite(request: Request): Promise<Request> {
+          if (this.type === 'custom') {
+            const url = new URL('https://www.example1.com');
+            return new Request(url.toString(), {
+              method: request.method,
+              headers: request.headers,
+            });
+          } else {
+            return request;
+          }
+        }
+      }
+
+      const ctx = TestUtil.mockRouteContext({
+        url: 'https://www.custom.com',
+      });
+      let requestRewrite = new CustomRequestRewrite(
+        {
+          type: 'custom',
+          field: UrlValueType.HREF,
+          value: {
+            source: 'https://www.custom.com',
+            sourceType: ValueSourceType.LITERAL,
+          },
+          operation: RewriteOperation.SET,
+        },
+        TestUtil.mockCommonSubProcessor(),
+      );
+      let request = await requestRewrite.rewrite(ctx.request, ctx);
+      assert.strictEqual(request.url, 'https://www.example1.com/');
+
+      requestRewrite = new CustomRequestRewrite(
+        {
+          type: 'custom2',
+          field: UrlValueType.HREF,
+          value: {
+            source: 'https://www.custom.com',
+            sourceType: ValueSourceType.LITERAL,
+          },
+          operation: RewriteOperation.SET,
+        },
+        TestUtil.mockCommonSubProcessor(),
+      );
+      request = await requestRewrite.rewrite(ctx.request, ctx);
+      assert.strictEqual(request.url, 'https://www.custom.com/');
     });
   });
 });

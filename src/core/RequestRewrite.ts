@@ -73,8 +73,14 @@ export class RequestRewrite<
         await this.rewriteMiddleware(ctx, value as RawMiddleware[] | null);
         break;
       default:
+        request = await this.extendRewrite(request, ctx, value);
         break;
     }
+    return request;
+  }
+
+  protected async extendRewrite(request: Request, _ctx: RouteContext, _value: unknown): Promise<Request> {
+    // 子类可以重写此方法来扩展 rewrite 逻辑
     return request;
   }
 
