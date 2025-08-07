@@ -55,8 +55,14 @@ export class ResponseRewrite<
         response = this.rewriteHeader(response, value as string | null);
         break;
       default:
+        response = await this.extendRewrite(response, ctx, value);
         break;
     }
+    return response;
+  }
+
+  protected async extendRewrite(response: Response, _ctx: RouteContext, _value: unknown): Promise<Response> {
+    // 这里可以扩展其他类型的响应覆写
     return response;
   }
 
