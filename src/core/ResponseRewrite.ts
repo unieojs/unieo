@@ -62,7 +62,7 @@ export class ResponseRewrite<
   }
 
   protected async extendRewrite(response: Response, _ctx: RouteContext, _value: unknown): Promise<Response> {
-    // 这里可以扩展其他类型的响应覆写
+    // Other types of response rewrite can be extended here
     return response;
   }
 

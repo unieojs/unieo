@@ -80,7 +80,7 @@ export class RequestRewrite<
   }
 
   protected async extendRewrite(request: Request, _ctx: RouteContext, _value: unknown): Promise<Request> {
-    // 子类可以重写此方法来扩展 rewrite 逻辑
+    // Other types of request rewrite can be extended here
     return request;
   }
 
