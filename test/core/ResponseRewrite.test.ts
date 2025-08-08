@@ -1,4 +1,5 @@
 import { assert, describe, it } from 'vitest';
+import type { RouteContext } from '../../src/core';
 import { ResponseRewrite } from '../../src/core';
 import { TestUtil } from '../TestUtil';
 import {
@@ -154,6 +155,63 @@ describe('test/core/ResponseRewrite.test.ts', () => {
       );
       response = await responseRewrite.rewrite(ctx.response!, ctx);
       assert.strictEqual(response.headers.get('x-foo'), 'baz');
+    });
+  });
+
+  describe('extends', () => {
+    it('should extend rewrite work', async () => {
+      class CustomResponseRewrite extends ResponseRewrite<'custom' | 'custom2'> {
+        protected async rewriteDefault(response: Response, _ctx: RouteContext, _value: unknown): Promise<Response> {
+          if (this.type === 'custom') {
+            response.headers.set('x-custom', 'custom-value');
+          }
+          return response;
+        }
+      }
+
+      const ctx = TestUtil.mockRouteContext({
+        url: 'https://www.example.com',
+      });
+      ctx.setResponse(
+        TestUtil.mockResponse('ok', {
+          'x-foo': 'bar',
+        }),
+      );
+      let responseRewrite = new CustomResponseRewrite(
+        {
+          type: 'custom',
+          field: 'x-foo',
+          value: {
+            source: 'baz',
+            sourceType: ValueSourceType.LITERAL,
+          },
+          operation: ResponseRewriteOperation.SET,
+        },
+        TestUtil.mockCommonSubProcessor(),
+      );
+
+      let response = await responseRewrite.rewrite(ctx.response!, ctx);
+      assert.strictEqual(response.headers.get('x-custom'), 'custom-value');
+
+      ctx.setResponse(
+        TestUtil.mockResponse('ok', {
+          'x-foo': 'bar',
+        }),
+      );
+      responseRewrite = new CustomResponseRewrite(
+        {
+          type: 'custom2',
+          field: 'x-foo',
+          value: {
+            source: 'baz',
+            sourceType: ValueSourceType.LITERAL,
+          },
+          operation: ResponseRewriteOperation.SET,
+        },
+        TestUtil.mockCommonSubProcessor(),
+      );
+      response = await responseRewrite.rewrite(ctx.response!, ctx);
+      assert.strictEqual(response.headers.get('x-custom'), null);
     });
   });
 });
