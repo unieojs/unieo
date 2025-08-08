@@ -161,7 +161,7 @@ describe('test/core/ResponseRewrite.test.ts', () => {
   describe('extends', () => {
     it('should extend rewrite work', async () => {
       class CustomResponseRewrite extends ResponseRewrite<'custom' | 'custom2'> {
-        protected async extendRewrite(response: Response, _ctx: RouteContext, _value: unknown): Promise<Response> {
+        protected async rewriteDefault(response: Response, _ctx: RouteContext, _value: unknown): Promise<Response> {
           if (this.type === 'custom') {
             response.headers.set('x-custom', 'custom-value');
           }

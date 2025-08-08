@@ -55,18 +55,18 @@ export class ResponseRewrite<
         response = this.rewriteHeader(response, value as string | null);
         break;
       default:
-        response = await this.extendRewrite(response, ctx, value);
+        response = await this.rewriteDefault(response, ctx, value);
         break;
     }
     return response;
   }
 
-  protected async extendRewrite(response: Response, _ctx: RouteContext, _value: unknown): Promise<Response> {
+  protected async rewriteDefault(response: Response, _ctx: RouteContext, _value: unknown): Promise<Response> {
     // Other types of response rewrite can be extended here
     return response;
   }
 
-  private rewriteHeader(response: Response, value: string | null): Response {
+  protected rewriteHeader(response: Response, value: string | null): Response {
     const headers = response.headers;
     switch (this.operation) {
       case ResponseRewriteOperation.SET:

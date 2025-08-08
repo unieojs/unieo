@@ -73,13 +73,13 @@ export class RequestRewrite<
         await this.rewriteMiddleware(ctx, value as RawMiddleware[] | null);
         break;
       default:
-        request = await this.extendRewrite(request, ctx, value);
+        request = await this.rewriteDefault(request, ctx, value);
         break;
     }
     return request;
   }
 
-  protected async extendRewrite(request: Request, _ctx: RouteContext, _value: unknown): Promise<Request> {
+  protected async rewriteDefault(request: Request, _ctx: RouteContext, _value: unknown): Promise<Request> {
     // Other types of request rewrite can be extended here
     return request;
   }
@@ -120,7 +120,7 @@ export class RequestRewrite<
     });
   }
 
-  private rewriteQuery(request: Request, value: string | null): Request {
+  protected rewriteQuery(request: Request, value: string | null): Request {
     const url = new URL(request.url);
     switch (this.operation) {
       case RewriteOperation.SET:
@@ -143,7 +143,7 @@ export class RequestRewrite<
     return new Request(url.toString(), new Request(request));
   }
 
-  private rewriteHeader(request: Request, value: string | null): Request {
+  protected rewriteHeader(request: Request, value: string | null): Request {
     const headers = request.headers;
     switch (this.operation) {
       case RewriteOperation.SET:

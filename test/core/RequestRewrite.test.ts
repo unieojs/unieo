@@ -561,7 +561,7 @@ describe('test/core/RequestRewrite.test.ts', () => {
 
     it('extendRewrite should work', async () => {
       class CustomRequestRewrite extends RequestRewrite<'custom' | 'custom2'> {
-        protected override async extendRewrite(request: Request): Promise<Request> {
+        protected override async rewriteDefault(request: Request): Promise<Request> {
           if (this.type === 'custom') {
             const url = new URL('https://www.example1.com');
             return new Request(url.toString(), {
