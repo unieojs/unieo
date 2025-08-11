@@ -76,6 +76,11 @@
       "types": "./dist/esm/util/index.d.ts",
       "import": "./dist/esm/util/index.js",
       "require": "./dist/cjs/util/index.js"
+    },
+    "./error": {
+      "types": "./dist/esm/common/Error/index.d.ts",
+      "import": "./dist/esm/common/Error/index.js",
+      "require": "./dist/cjs/common/Error/index.js"
     }
   }
 }
