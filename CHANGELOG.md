@@ -1,3 +1,9 @@
+## [1.5.0](https://github.com/unieojs/unieo/compare/v1.4.1...v1.5.0) (2025-08-11)
+
+### 🚀 Features
+
+* **RequestRewrite:** support rewrite default logic ([#49](https://github.com/unieojs/unieo/issues/49)) ([35e3123](https://github.com/unieojs/unieo/commit/35e312398a1793ce7d4fbee1a0b3c16ff1d07a23))
+
 ## [1.4.1](https://github.com/unieojs/unieo/compare/v1.4.0...v1.4.1) (2025-08-05)
 
 ### 🐛 Bug Fixes
