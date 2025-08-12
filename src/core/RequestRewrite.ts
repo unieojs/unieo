@@ -1,4 +1,4 @@
-import { isNil, isObject, isString } from 'lodash';
+import { isNil, isObject, isString } from 'lodash-es';
 import { RequestInitValueType, RequestRewriteType, RewriteOperation, UrlValueType } from '../common/Enum';
 import type { ValueRawData } from './value';
 import { Value } from './value';

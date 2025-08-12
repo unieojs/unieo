@@ -1,5 +1,5 @@
 import assert from 'assert';
-import { noop } from 'lodash';
+import { noop } from 'lodash-es';
 import sinon from 'sinon';
 import { describe, expect, it, vi } from 'vitest';
 import { ErrorCode, genError } from '../../src/common/Error';

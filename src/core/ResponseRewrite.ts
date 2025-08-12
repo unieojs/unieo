@@ -4,7 +4,7 @@ import { Match } from './Match';
 import type { ValueRawData } from './value';
 import type { RouteContext } from './RouteContext';
 import type { RawMatch } from './Match';
-import { isNil } from 'lodash';
+import { isNil } from 'lodash-es';
 import type { BaseProcessor } from './processor';
 
 export interface RawResponseRewrite<

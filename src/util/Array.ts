@@ -1,4 +1,4 @@
-import { isNil } from 'lodash';
+import { isNil } from 'lodash-es';
 
 export function enumToArray<T extends object>(enumeration: T): T[keyof T][] {
   return Object.keys(enumeration)

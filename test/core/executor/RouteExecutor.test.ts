@@ -2,7 +2,7 @@ import { assert, describe, it, vi } from 'vitest';
 import sinon from 'sinon';
 import { TestUtil } from '../../TestUtil';
 import { CommonRouteExecutor, RequestRewriteExecutor, ResponseRewriteExecutor } from '../../../src';
-import { noop } from 'lodash';
+import { noop } from 'lodash-es';
 
 describe('test/executor/RouteExecutor.test.ts', () => {
   // it('should execute work', async () => {

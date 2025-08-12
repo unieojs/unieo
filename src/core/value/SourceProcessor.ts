@@ -1,5 +1,5 @@
 import { Value } from '.';
-import { isObject, isString } from 'lodash';
+import { isObject, isString } from 'lodash-es';
 import type { RouteContext } from '../RouteContext';
 import type { UrlValueType } from '../../common/Enum';
 import type { IValue, ValueRawData } from '.';

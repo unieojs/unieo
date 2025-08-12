@@ -1,5 +1,5 @@
 import { Match } from '../Match';
-import { isNil, isObject, isString } from 'lodash';
+import { isNil, isObject, isString } from 'lodash-es';
 import type { RouteContext } from '../RouteContext';
 import type { RawMatch } from '../Match';
 import type { BaseProcessor } from '../processor/BaseProcessor';

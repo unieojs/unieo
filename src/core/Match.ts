@@ -1,4 +1,4 @@
-import { isArray, isNil, isObject, isString } from 'lodash';
+import { isArray, isNil, isObject, isString } from 'lodash-es';
 import { match } from 'path-to-regexp';
 import { MatchOperator, Operator, ValueType } from '../common/Enum';
 import { Value } from './value';

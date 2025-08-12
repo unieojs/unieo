@@ -1,5 +1,5 @@
 // fork from https://github.com/jshttp/vary/blob/master/index.js#L96
-import { isNil } from 'lodash';
+import { isNil } from 'lodash-es';
 
 export function parseHeader(header = ''): string[] {
   let end = 0;
