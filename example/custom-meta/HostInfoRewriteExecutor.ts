@@ -38,7 +38,7 @@ export class HostInfoRewriteExecutor extends BaseExecutor<CustomContext> {
       result.result = await subProcessor.process(this.type, hostInfo) as HostInfo;
       this.logger.info('initHostInfo succeed');
     } catch (err) {
-      const error = genError(ErrorCode.SubRouteInitHostInfoError, {
+      const error = genError(ErrorCode.SystemError, {
         message: (err as Error).message,
         stack: (err as Error).stack,
       });
