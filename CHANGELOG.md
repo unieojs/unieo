@@ -1,3 +1,9 @@
+## [1.6.0](https://github.com/unieojs/unieo/compare/v1.5.0...v1.6.0) (2025-08-11)
+
+### 🚀 Features
+
+* export error in @unieojs/unieo/error ([#50](https://github.com/unieojs/unieo/issues/50)) ([3e601ec](https://github.com/unieojs/unieo/commit/3e601ec2c1e018bf9f30c645c0408766cbc1cbe7))
+
 ## [1.5.0](https://github.com/unieojs/unieo/compare/v1.4.1...v1.5.0) (2025-08-11)
 
 ### 🚀 Features
