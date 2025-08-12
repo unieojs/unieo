@@ -1,7 +1,7 @@
 import type { GroupRawRoute, MiddlewareGen } from '../../src';
 import { ExecutorFactory, GroupProcessor, MetaFactory, ProcessorFactory, SubProcessor } from '../../src';
 import type { ERFetchEvent, HttpClient, ILogger } from '../../src/types';
-import { ERPerformance } from '../../src/core/ERPerformance';
+import { ERPerformance } from '../../src';
 import { GroupProcessorType, SubProcessorType } from '../../src/common/Enum';
 import { HostInfoRewriteMeta } from './HostInfoRewriteMeta';
 import { HostInfoRewriteExecutor } from './HostInfoRewriteExecutor';
