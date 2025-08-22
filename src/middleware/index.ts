@@ -12,24 +12,16 @@ import DefaultFetch from './DefaultFetch';
 import ErrorFallback from './ErrorFallback';
 
 const DEFAULT_FETCH_MIDDLE_NAME = 'DefaultFetch';
-// const XUEXIAO_MIDDLEWARE_NAME = 'XueXiao';
-
-// 仅用于单测，添加测试中间件
-// export function _addMiddleware(name: string, middlewareGen: MiddlewareGen) {
-//   if (!MIDDLEWARE_MAP.has(name)) {
-//     MIDDLEWARE_MAP.set(name, middlewareGen);
-//   }
-// }
 
 export class MiddlewareManager {
   #middlewares: MiddlewareConfig[];
-  #presetMiddlewares: Map<string, MiddlewareGen<BaseMiddlewareOption>>;
+  #presetMiddlewares: Map<string, MiddlewareGen>;
 
-  constructor(data: { middlewares?: [string, MiddlewareGen<BaseMiddlewareOption>][] }) {
+  constructor(data: { middlewares?: [string, MiddlewareGen][] }) {
     this.#middlewares = [];
-    this.#presetMiddlewares = new Map<string, MiddlewareGen<BaseMiddlewareOption>>([
-      [ DEFAULT_FETCH_MIDDLE_NAME, DefaultFetch as MiddlewareGen<BaseMiddlewareOption> ],
-      [ 'ErrorFallback', ErrorFallback as MiddlewareGen<BaseMiddlewareOption> ],
+    this.#presetMiddlewares = new Map<string, MiddlewareGen>([
+      [ DEFAULT_FETCH_MIDDLE_NAME, DefaultFetch as MiddlewareGen ],
+      [ 'ErrorFallback', ErrorFallback as MiddlewareGen ],
       ...(data.middlewares ?? []),
     ]);
   }
@@ -80,7 +72,6 @@ export class MiddlewareManager {
     const middlewares: Middleware[] = [];
 
     let defaultFetchMiddlewareConfig: MiddlewareConfig = [ DEFAULT_FETCH_MIDDLE_NAME, {} ];
-    // let existXuexiaoMiddleware = false;
     for (const config of middlewareConfigs) {
       const name = config[0];
       if (name === DEFAULT_FETCH_MIDDLE_NAME) {
@@ -88,23 +79,12 @@ export class MiddlewareManager {
         defaultFetchMiddlewareConfig = config;
         continue;
       }
-      // if (name === XUEXIAO_MIDDLEWARE_NAME) {
-      //   existXuexiaoMiddleware = true;
-      // }
       const middleware = await this.load(config);
       if (middleware) {
         middlewares.push(middleware);
       }
     }
-    // 可以根据 host 动态添加中间件
-    // if (ctx.host === 'example.com' && !existSpecialMiddleware) {
-    //   const specialMiddleware = await loadMiddleware([
-    //     SPECIAL_MIDDLEWARE_NAME,
-    //     { config: 'value' }
-    //   ]);
-    //   middlewares.unshift(specialMiddleware!);
-    // }
-    // DefaultFetch 始终存在，做了兼容保证在 SSR 这种独立请求的中间件存在时不存重复发请求
+    // DefaultFetch 始终存在
     const defaultFetchMiddleware = await this.load(defaultFetchMiddlewareConfig);
     middlewares.push(defaultFetchMiddleware);
     const fn = compose(middlewares);
