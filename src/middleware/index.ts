@@ -1,7 +1,7 @@
 import compose from 'koa-compose';
 import { ErrorCode, genError } from '../common/Error';
 import type { RouteContext } from '../core';
-import type { BaseMiddlewareOption, Middleware, MiddlewareConfig, MiddlewareGen, MiddlewareNext } from './types';
+import type { Middleware, MiddlewareConfig, MiddlewareGen, MiddlewareNext } from './types';
 import DefaultFetch from './DefaultFetch';
 import ErrorFallback from './ErrorFallback';
 
