@@ -1,7 +1,7 @@
-import { assert, describe, it } from 'vitest';
+import { assert, describe, expect, it } from 'vitest';
+import { MatchOperator, Operator, UrlValueType, ValueSourceType, ValueType } from '../../src/common/Enum';
 import { Match, type RawMatch } from '../../src/core';
 import { TestUtil } from '../TestUtil';
-import { MatchOperator, Operator, UrlValueType, ValueSourceType, ValueType } from '../../src/common/Enum';
 
 describe('test/core/Match.test.ts', () => {
   const logger = TestUtil.mockHelper().logger;
@@ -933,5 +933,202 @@ describe('test/core/Match.test.ts', () => {
       const res = await match.match(ctx, logger);
       assert.ok(res);
     });
+
+    describe('not_key_of', () => {
+      it('should not_key_of work when origin is not in criteria keys', async () => {
+        const match = new Match(
+          {
+            list: [
+              {
+                origin: {
+                  source: 'test.html',
+                  sourceType: ValueSourceType.LITERAL,
+                  valueType: ValueType.STRING,
+                },
+                criteria: {
+                  source: { 'index.html': 'test' },
+                  sourceType: ValueSourceType.LITERAL,
+                  valueType: ValueType.JSON,
+                },
+                operator: Operator.NOT_KEY_OF,
+              },
+            ],
+          },
+          TestUtil.mockCommonSubProcessor(),
+        );
+        const res = await match.match(ctx, logger);
+        expect(res).toBeTruthy();
+      });
+
+      it('should not_key_of return false when origin is in criteria keys', async () => {
+        const match = new Match(
+          {
+            list: [
+              {
+                origin: {
+                  source: 'index.html',
+                  sourceType: ValueSourceType.LITERAL,
+                  valueType: ValueType.STRING,
+                },
+                criteria: {
+                  source: { 'index.html': 'test', 'about.html': 'page' },
+                  sourceType: ValueSourceType.LITERAL,
+                  valueType: ValueType.JSON,
+                },
+                operator: Operator.NOT_KEY_OF,
+              },
+            ],
+          },
+          TestUtil.mockCommonSubProcessor(),
+        );
+        const res = await match.match(ctx, logger);
+        expect(res).toBeFalsy();
+      });
+
+      it('should not_key_of return true when criteria is not an object', async () => {
+        const match = new Match(
+          {
+            list: [
+              {
+                origin: {
+                  source: 'test.html',
+                  sourceType: ValueSourceType.LITERAL,
+                  valueType: ValueType.STRING,
+                },
+                criteria: {
+                  source: 'not an object',
+                  sourceType: ValueSourceType.LITERAL,
+                  valueType: ValueType.STRING,
+                },
+                operator: Operator.NOT_KEY_OF,
+              },
+            ],
+          },
+          TestUtil.mockCommonSubProcessor(),
+        );
+        const res = await match.match(ctx, logger);
+        expect(res).toBeTruthy();
+      });
+
+      it('should not_key_of return true when criteria is null', async () => {
+        const match = new Match(
+          {
+            list: [
+              {
+                origin: {
+                  source: 'test.html',
+                  sourceType: ValueSourceType.LITERAL,
+                  valueType: ValueType.STRING,
+                },
+                criteria: {
+                  source: null,
+                  sourceType: ValueSourceType.LITERAL,
+                },
+                operator: Operator.NOT_KEY_OF,
+              },
+            ],
+          },
+          TestUtil.mockCommonSubProcessor(),
+        );
+        const res = await match.match(ctx, logger);
+        expect(res).toBeTruthy();
+      });
+
+      it('should not_key_of return true when criteria is undefined', async () => {
+        const match = new Match(
+          {
+            list: [
+              {
+                origin: {
+                  source: 'test.html',
+                  sourceType: ValueSourceType.LITERAL,
+                  valueType: ValueType.STRING,
+                },
+                // 完全不提供 criteria 字段
+                operator: Operator.NOT_KEY_OF,
+              },
+            ],
+          },
+          TestUtil.mockCommonSubProcessor(),
+        );
+        const res = await match.match(ctx, logger);
+        expect(res).toBeTruthy();
+      });
+
+      it('should not_key_of return true when origin is not a string', async () => {
+        const match = new Match(
+          {
+            list: [
+              {
+                origin: {
+                  source: 123,
+                  sourceType: ValueSourceType.LITERAL,
+                  valueType: ValueType.INTEGER,
+                },
+                criteria: {
+                  source: { 'index.html': 'test' },
+                  sourceType: ValueSourceType.LITERAL,
+                  valueType: ValueType.JSON,
+                },
+                operator: Operator.NOT_KEY_OF,
+              },
+            ],
+          },
+          TestUtil.mockCommonSubProcessor(),
+        );
+        const res = await match.match(ctx, logger);
+        expect(res).toBeTruthy();
+      });
+
+      it('should not_key_of return true when origin is null', async () => {
+        const match = new Match(
+          {
+            list: [
+              {
+                origin: {
+                  source: 'non-existent-header',
+                  sourceType: ValueSourceType.REQUEST_HEADER,
+                },
+                criteria: {
+                  source: { 'index.html': 'test' },
+                  sourceType: ValueSourceType.LITERAL,
+                  valueType: ValueType.JSON,
+                },
+                operator: Operator.NOT_KEY_OF,
+              },
+            ],
+          },
+          TestUtil.mockCommonSubProcessor(),
+        );
+        const res = await match.match(ctx, logger);
+        expect(res).toBeTruthy();
+      });
+
+      it('should not_key_of work with empty object', async () => {
+        const match = new Match(
+          {
+            list: [
+              {
+                origin: {
+                  source: 'any-key',
+                  sourceType: ValueSourceType.LITERAL,
+                  valueType: ValueType.STRING,
+                },
+                criteria: {
+                  source: {},
+                  sourceType: ValueSourceType.LITERAL,
+                  valueType: ValueType.JSON,
+                },
+                operator: Operator.NOT_KEY_OF,
+              },
+            ],
+          },
+          TestUtil.mockCommonSubProcessor(),
+        );
+        const res = await match.match(ctx, logger);
+        expect(res).toBeTruthy();
+      });
+    });
+
   });
 });

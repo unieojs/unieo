@@ -186,6 +186,12 @@ export class Match {
         }
         return Object.keys(criteria).includes(origin);
       }
+      case Operator.NOT_KEY_OF: {
+        if (!isObject(criteria) || !isString(origin)) {
+          return true;
+        }
+        return !Object.keys(criteria).includes(origin);
+      }
       default:
         return false;
     }
