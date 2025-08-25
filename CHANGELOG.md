@@ -1,3 +1,9 @@
+## [1.7.0](https://github.com/unieojs/unieo/compare/v1.6.0...v1.7.0) (2025-08-25)
+
+### 🚀 Features
+
+* **Match:** introduce not_key_of operator ([#55](https://github.com/unieojs/unieo/issues/55)) ([dbee93d](https://github.com/unieojs/unieo/commit/dbee93d69dae42150e137973181331cc78e9b493))
+
 ## [1.6.0](https://github.com/unieojs/unieo/compare/v1.5.0...v1.6.0) (2025-08-11)
 
 ### 🚀 Features
