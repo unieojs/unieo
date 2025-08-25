@@ -71,6 +71,7 @@ export enum Operator {
   NAN = 'nan',
   NUMBER = 'number',
   KEY_OF = 'key_of',
+  NOT_KEY_OF = 'not_key_of',
 }
 
 export enum RequestRewriteType {
