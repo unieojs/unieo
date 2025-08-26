@@ -1,24 +1,7 @@
-import { RouteExecutor } from './executor';
-import { MetaType } from './meta';
+import { BaseRouteExecutor } from './executor';
 import type { RouteContext } from './RouteContext';
 
-export class CommonRouteExecutor<T extends RouteContext> extends RouteExecutor<T> {
-  public async redirect() {
-    await this.executeMeta(MetaType.REDIRECT);
-  }
-
-  public async requestRewrite() {
-    await this.executeMeta(MetaType.REQUEST_REWRITE);
-  }
-
-  public async responseRewrite() {
-    await this.executeMeta(MetaType.RESPONSE_REWRITE);
-  }
-
-  public async request() {
-    return this.ctx.runMiddleware();
-  }
-
+export class CommonRouteExecutor<T extends RouteContext> extends BaseRouteExecutor<T> {
   public async execute() {
     // redirect
     await this.redirect();

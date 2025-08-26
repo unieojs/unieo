@@ -1,7 +1,7 @@
-import { CommonRouteExecutor } from '../../src/core/CommonRouteExecutor';
 import type { RouteContext } from '../../src';
+import { BaseRouteExecutor } from '../../src';
 
-export class CustomRouteExecutor extends CommonRouteExecutor<RouteContext> {
+export class CustomRouteExecutor extends BaseRouteExecutor<RouteContext> {
   public async rewriteHostInfo() {
     await this.executeMeta('hostInfoRewrites');
   }
