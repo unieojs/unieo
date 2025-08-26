@@ -1,3 +1,9 @@
+## [1.7.1](https://github.com/unieojs/unieo/compare/v1.7.0...v1.7.1) (2025-08-26)
+
+### ♻️ Code Refactoring
+
+* add BaseRouteExecutor ([#57](https://github.com/unieojs/unieo/issues/57)) ([f967fc5](https://github.com/unieojs/unieo/commit/f967fc50d00692f44af2b865903e84270896141e))
+
 ## [1.7.0](https://github.com/unieojs/unieo/compare/v1.6.0...v1.7.0) (2025-08-25)
 
 ### 🚀 Features
