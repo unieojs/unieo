@@ -74,6 +74,17 @@ describe('test/util/RedirectHelper.test.ts', () => {
     assert.strictEqual(response!.href, 'https://www.exampleplus.com/1');
   });
 
+  it('should path regexp sanitized', () => {
+    const redirect = new RedirectHelper({
+      source: '/:path+/',
+      destination: 'https://www.example.com/:path+',
+      type: RedirectType.PATH_REGEXP,
+    });
+    const response = redirect.redirect(new URL('https://www.example.com/%0a/evil.com/'));
+    assert.strictEqual(response!.status, 302);
+    assert.strictEqual(response!.href, 'https://www.example.com/evil.com');
+  });
+
   it('should param match work', () => {
     const redirect = new RedirectHelper({
       source: '/answer/detail?id=:id',
