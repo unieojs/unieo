@@ -1,3 +1,9 @@
+## [1.7.2](https://github.com/unieojs/unieo/compare/v1.7.1...v1.7.2) (2025-12-23)
+
+### 🐛 Bug Fixes
+
+* sanitize decoded path ([#58](https://github.com/unieojs/unieo/issues/58)) ([e2456d8](https://github.com/unieojs/unieo/commit/e2456d848267ab06715ba6bff243ab1a87adc057))
+
 ## [1.7.1](https://github.com/unieojs/unieo/compare/v1.7.0...v1.7.1) (2025-08-26)
 
 ### ♻️ Code Refactoring
