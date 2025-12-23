@@ -4,6 +4,7 @@ import {
   getHost,
   getPath,
   getProtocol,
+  getSanitizedPath,
   getSearch,
   HTTP_PROTOCOL,
   isValidUrl,
@@ -148,7 +149,7 @@ export class RedirectHelper {
       ...pathMatchResult,
       ...queryMatchResult,
     });
-    return new URL(destPath, this.destination).href;
+    return new URL(getSanitizedPath(destPath), this.destination).href;
   }
 
   private getPathMatchResult(url: URL): object | null {
