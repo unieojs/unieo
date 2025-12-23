@@ -79,7 +79,7 @@ export function getPageExt(pagePath: string): string {
 }
 
 export function getSanitizedPath(path: string): string {
-  // For /\t/evil.com => /evil.com
-  //     /\n/\t/evil.com => /evil.com
+  // After URL decoding: /[tab]/evil.com             => /evil.com
+  //                      /[newline]/[tab]/evil.com  => /evil.com
   return path.replace(/^[/\t\n\r]+/, '/');
 }
