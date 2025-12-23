@@ -3,7 +3,7 @@ import {
   appendSearchParams,
   getHost,
   getPath,
-  getProtocol, 
+  getProtocol,
   getSanitizedPath,
   getSearch,
   HTTP_PROTOCOL,
