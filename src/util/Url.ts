@@ -77,3 +77,9 @@ export function getPageExt(pagePath: string): string {
   const suffix = lastSubPath.split('.').pop() ?? '';
   return suffix.toLowerCase();
 }
+
+export function getSanitizedPath(path: string): string {
+  // After URL decoding: /[tab]/evil.com             => /evil.com
+  //                      /[newline]/[tab]/evil.com  => /evil.com
+  return path.replace(/^[/\t\n\r]+/, '/');
+}
