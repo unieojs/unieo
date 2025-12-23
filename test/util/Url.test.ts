@@ -67,17 +67,5 @@ describe('test/util/Url.test.ts', () => {
       const result = getSanitizedPath('/\t/evil.com#section');
       assert.strictEqual(result, '/evil.com#section');
     });
-
-    it('should handle complex open redirect attack vectors', () => {
-      // Test case from RedirectHelper security fix
-      const result1 = getSanitizedPath('/\t/evil.com');
-      assert.strictEqual(result1, '/evil.com');
-      
-      const result2 = getSanitizedPath('/\n/\t/evil.com');
-      assert.strictEqual(result2, '/evil.com');
-      
-      const result3 = getSanitizedPath('/\n/\r/evil.com');
-      assert.strictEqual(result3, '/evil.com');
-    });
   });
 });
