@@ -84,11 +84,11 @@ describe('test/util/RedirectHelper.test.ts', () => {
     assert.strictEqual(response!.status, 302);
     assert.strictEqual(response!.href, 'https://www.example.com/evil.com');
 
-    response = redirect.redirect(new URL('https://www.example.com/%0a%0a/evil.com/'));
+    response = redirect.redirect(new URL('https://www.example.com/%0a%09/evil.com/'));
     assert.strictEqual(response!.status, 302);
     assert.strictEqual(response!.href, 'https://www.example.com/evil.com');
 
-    response = redirect.redirect(new URL('https://www.example.com/%0a/%0a/evil.com/'));
+    response = redirect.redirect(new URL('https://www.example.com/%0a/%0d/evil.com/'));
     assert.strictEqual(response!.status, 302);
     assert.strictEqual(response!.href, 'https://www.example.com/evil.com');
   });
