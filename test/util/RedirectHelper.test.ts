@@ -74,7 +74,7 @@ describe('test/util/RedirectHelper.test.ts', () => {
     assert.strictEqual(response!.href, 'https://www.exampleplus.com/1');
   });
 
-  it('should path regexp sanitized', () => {
+  it('should sanitize path regexp', () => {
     const redirect = new RedirectHelper({
       source: '/:path+/',
       destination: 'https://www.example.com/:path+',
